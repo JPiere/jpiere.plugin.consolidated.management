@@ -1,0 +1,12 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>jpiere.plugin.consolidated.management</artifactId>
+  <packaging>eclipse-plugin</packaging>
+  <name>jpiere.plugin.consolidated.management</name>
+  <parent>
+    <groupId>org.idempiere</groupId>
+	<artifactId>org.idempiere.parent</artifactId>
+	<version>${revision}</version>
+	<relativePath>../../../../../../../src/eclipse202312_JPiere11/org.idempiere.parent/pom.xml</relativePath>
+   </parent>
+</project>

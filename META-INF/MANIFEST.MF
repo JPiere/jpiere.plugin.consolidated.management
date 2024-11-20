@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: jpiere.plugin.consolidated.management
+Bundle-SymbolicName: jpiere.plugin.consolidated.management;singleton:=true
+Bundle-Version: 11.0.0.qualifier
+Require-Bundle: org.adempiere.base;bundle-version="11.0.0"
+Bundle-Vendor: OSS ERP Solutions
+Automatic-Module-Name: jpiere.plugin.consolidated.management
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-17
+Service-Component: OSGI-INF/*.xml

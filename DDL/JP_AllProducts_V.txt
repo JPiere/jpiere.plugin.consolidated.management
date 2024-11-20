@@ -1,0 +1,85 @@
+CREATE OR REPLACE VIEW adempiere.JP_AllProducts_V
+ AS
+SELECT
+	0 AS AD_Client_ID
+	,0 AS AD_Org_ID
+	,p.AD_Client_ID AS AD_AllClients_V_ID
+	,org.Name AS JP_Org_Name
+	,p.M_Product_ID AS JP_AllProducts_V_ID
+	,p.M_Product_UU AS JP_AllProducts_V_UU
+	,p.IsActive AS IsActive
+    ,p.Created AS Created 
+    ,p.Createdby AS Createdby
+    ,p.Updated AS Updated
+    ,p.Updatedby AS Updatedby
+    ,p.Value AS Value
+    ,p.Name AS Name
+    ,p.Description AS Description
+    ,p.Documentnote AS Documentnote
+    ,p.Help AS Help
+    ,p.Upc AS Upc
+    ,p.sku AS sku
+    ,uom.Name AS JP_UOM_Name
+	,p.IsSummary AS IsSummary
+    ,p.IsStocked AS IsStocked
+    ,p.IsPurchased AS IsPurchased
+    ,p.IsSold AS IsSold
+    ,p.IsBOM AS IsBOM
+    ,p.IsInvoicePrintDetails AS IsInvoicePrintDetails
+    ,p.IsPickListPrintDetails AS IsPickListPrintDetails
+    ,p.IsVerified AS IsVerified
+    ,rev.Name AS JP_RevenueRecognition_Name
+    ,pc.Value AS JP_Product_Category_Value
+    ,p.Classification AS Classification
+    ,p.Volume AS Volume
+    ,p.Weight AS Weight
+    ,p.ShelfWidth AS ShelfWidth
+    ,p.ShelfHeight AS ShelfHeight
+    ,p.ShelfDepth AS ShelfDepth
+    ,p.UnitsPerPallet AS UnitsPerPallet
+    ,tax.Name AS JP_TaxCategory_Name
+    ,p.Discontinued AS Discontinued
+    ,p.DiscontinuedBy AS DiscontinuedBy
+    ,p.ProductType AS ProductType
+    ,p.ImageUrl AS ImageUrl
+    ,p.DescriptionUrl AS DescriptionUrl
+    ,p.GuaranteeDays AS GuaranteeDays
+    ,mail.Name AS JP_MailText_Name
+    ,p.VersionNo AS  VersionNo
+    ,att.Name AS JP_AttributeSet_Name
+    ,p.DownloadUrl AS DownloadUrl
+    ,fc.Name AS JP_FreightCategory_Name
+    ,loc.Value AS JP_Locator_Value
+    ,p.GuaranteeDaysMin AS GuaranteeDaysMin
+    ,p.IsWebStoreFeatured AS IsWebStoreFeatured
+    ,p.IsSelfService AS IsSelfService
+    ,p.IsDropShip AS IsDropShip
+    ,p.IsExcludeautoDelivery AS IsExcludeautoDelivery
+    ,p.Group1 AS Group1
+    ,p.Group2 AS Group2
+    ,p.LowLevel AS LowLevel
+    ,p.UnitsPerPack AS UnitsPerPack
+    ,p.DiscontInuedat AS Discontinuedat
+    ,pt.Name AS JP_PartType_Name
+    ,p.IsKanban AS IsKanban
+    ,p.IsManufactured AS IsManufactured
+    ,p.IsPhantom AS IsPhantom
+    ,p.IsOwnBox AS IsOwnBox
+    ,p.CustomStariffNumber AS CustomStariffNumber
+    ,p.IsAutoProduce AS IsAutoProduce
+    ,p.JP_CM_Product_ID AS JP_CM_Product_ID 
+
+FROM adempiere.M_Product p
+		INNER JOIN adempiere.AD_Org org ON (p.AD_Org_ID=org.AD_Org_ID)
+		INNER JOIN adempiere.C_UOM uom ON (p.C_UOM_ID=uom.C_UOM_ID)
+		LEFT OUTER JOIN adempiere.C_RevenueRecognition rev ON (p.C_RevenueRecognition_ID=rev.C_RevenueRecognition_ID)
+		INNER JOIN adempiere.M_Product_Category pc ON (p.M_Product_Category_ID=pc.M_Product_Category_ID)
+		LEFT OUTER JOIN adempiere.C_TaxCategory tax ON (p.C_TaxCategory_ID=tax.C_TaxCategory_ID)
+		LEFT OUTER JOIN adempiere.R_MailText mail ON (p.R_MailText_ID=mail.R_MailText_ID)
+		LEFT OUTER JOIN adempiere.M_AttributeSet att ON (p.M_AttributeSet_ID=att.M_AttributeSet_ID)
+		LEFT OUTER JOIN adempiere.M_FreightCategory fc ON (p.M_FreightCategory_ID=fc.M_FreightCategory_ID)
+		LEFT OUTER JOIN adempiere.M_Locator loc ON(p.M_Locator_ID=loc.M_Locator_ID)
+		LEFT OUTER JOIN adempiere.M_PartType pt ON(p.M_PartType_ID = pt.M_PartType_ID);
+		
+ALTER TABLE adempiere.JP_AllProducts_v
+    OWNER TO adempiere;
