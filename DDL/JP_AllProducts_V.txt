@@ -48,7 +48,7 @@ SELECT
     ,p.VersionNo AS  VersionNo
     ,att.Name AS JP_AttributeSet_Name
     ,p.DownloadUrl AS DownloadUrl
-    ,fc.Name AS JP_FreightCategory_Name
+    ,fc.Value AS JP_FreightCategory_Value
     ,loc.Value AS JP_Locator_Value
     ,p.GuaranteeDaysMin AS GuaranteeDaysMin
     ,p.IsWebStoreFeatured AS IsWebStoreFeatured

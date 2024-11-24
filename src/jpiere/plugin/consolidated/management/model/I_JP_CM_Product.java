@@ -92,19 +92,6 @@ public interface I_JP_CM_Product
 	  */
 	public String getClassification();
 
-    /** Column name CopyFrom */
-    public static final String COLUMNNAME_CopyFrom = "CopyFrom";
-
-	/** Set Copy From.
-	  * Copy From Record
-	  */
-	public void setCopyFrom (String CopyFrom);
-
-	/** Get Copy From.
-	  * Copy From Record
-	  */
-	public String getCopyFrom();
-
     /** Column name Created */
     public static final String COLUMNNAME_Created = "Created";
 
@@ -545,18 +532,18 @@ public interface I_JP_CM_Product
 	/** Get Consolidated Product (UU)	  */
 	public String getJP_CM_Product_UU();
 
-    /** Column name JP_FreightCategory_Name */
-    public static final String COLUMNNAME_JP_FreightCategory_Name = "JP_FreightCategory_Name";
+    /** Column name JP_FreightCategory_Value */
+    public static final String COLUMNNAME_JP_FreightCategory_Value = "JP_FreightCategory_Value";
 
-	/** Set Freight Category(Name).
+	/** Set Freight Category(Search Key).
 	  * Category of the Freight
 	  */
-	public void setJP_FreightCategory_Name (String JP_FreightCategory_Name);
+	public void setJP_FreightCategory_Value (String JP_FreightCategory_Value);
 
-	/** Get Freight Category(Name).
+	/** Get Freight Category(Search Key).
 	  * Category of the Freight
 	  */
-	public String getJP_FreightCategory_Name();
+	public String getJP_FreightCategory_Value();
 
     /** Column name JP_Locator_Value */
     public static final String COLUMNNAME_JP_Locator_Value = "JP_Locator_Value";

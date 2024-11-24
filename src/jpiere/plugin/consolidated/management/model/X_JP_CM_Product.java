@@ -35,7 +35,7 @@ public class X_JP_CM_Product extends PO implements I_JP_CM_Product, I_Persistent
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20241120L;
+	private static final long serialVersionUID = 20241123L;
 
     /** Standard Constructor */
     public X_JP_CM_Product (Properties ctx, int JP_CM_Product_ID, String trxName)
@@ -331,22 +331,6 @@ public class X_JP_CM_Product extends PO implements I_JP_CM_Product, I_Persistent
 	public String getClassification()
 	{
 		return (String)get_Value(COLUMNNAME_Classification);
-	}
-
-	/** Set Copy From.
-		@param CopyFrom Copy From Record
-	*/
-	public void setCopyFrom (String CopyFrom)
-	{
-		set_Value (COLUMNNAME_CopyFrom, CopyFrom);
-	}
-
-	/** Get Copy From.
-		@return Copy From Record
-	  */
-	public String getCopyFrom()
-	{
-		return (String)get_Value(COLUMNNAME_CopyFrom);
 	}
 
 	/** Set Customs Tariff Number.
@@ -1022,20 +1006,20 @@ public class X_JP_CM_Product extends PO implements I_JP_CM_Product, I_Persistent
 		return (String)get_Value(COLUMNNAME_JP_CM_Product_UU);
 	}
 
-	/** Set Freight Category(Name).
-		@param JP_FreightCategory_Name Category of the Freight
+	/** Set Freight Category(Search Key).
+		@param JP_FreightCategory_Value Category of the Freight
 	*/
-	public void setJP_FreightCategory_Name (String JP_FreightCategory_Name)
+	public void setJP_FreightCategory_Value (String JP_FreightCategory_Value)
 	{
-		set_Value (COLUMNNAME_JP_FreightCategory_Name, JP_FreightCategory_Name);
+		set_Value (COLUMNNAME_JP_FreightCategory_Value, JP_FreightCategory_Value);
 	}
 
-	/** Get Freight Category(Name).
+	/** Get Freight Category(Search Key).
 		@return Category of the Freight
 	  */
-	public String getJP_FreightCategory_Name()
+	public String getJP_FreightCategory_Value()
 	{
-		return (String)get_Value(COLUMNNAME_JP_FreightCategory_Name);
+		return (String)get_Value(COLUMNNAME_JP_FreightCategory_Value);
 	}
 
 	/** Set Locator(Search Key).
