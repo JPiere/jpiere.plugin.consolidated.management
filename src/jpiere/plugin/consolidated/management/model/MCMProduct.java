@@ -19,14 +19,20 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.compiere.model.MAttributeSet;
+import org.compiere.model.MBPartner;
 import org.compiere.model.MClient;
+import org.compiere.model.MExpenseType;
 import org.compiere.model.MFreightCategory;
 import org.compiere.model.MLocator;
 import org.compiere.model.MMailText;
 import org.compiere.model.MProduct;
 import org.compiere.model.MProductCategory;
+import org.compiere.model.MProductPO;
+import org.compiere.model.MResource;
+import org.compiere.model.MResourceType;
 import org.compiere.model.MRevenueRecognition;
 import org.compiere.model.MTaxCategory;
+import org.compiere.model.MWarehouse;
 import org.compiere.model.PO;
 import org.compiere.model.Query;
 import org.compiere.model.X_M_PartType;
@@ -282,19 +288,85 @@ public class MCMProduct extends X_JP_CM_Product {
 		return po;
 	}
 	
-	static public String createMProduct(Properties ctx, MClient m_Client, MCMProduct cm_Product, String trxName)
-	{
-		return createMProduct(ctx, m_Client, cm_Product, null, trxName);
+	private static CCache<Integer,Map<String,MResourceType>>c_MResourceType = new CCache<Integer,Map<String,MResourceType>>(Table_Name, 60);
+	
+	static public MResourceType getMResourceType(int AD_Client_ID, String value, String trxName)
+	{	
+		MResourceType po = null;
+		Map<String,MResourceType> cachedMap = c_MResourceType.get(AD_Client_ID);
+		if (cachedMap == null)
+		{
+			cachedMap = new HashMap<String,MResourceType>();
+			c_MResourceType.put(AD_Client_ID, cachedMap);	
+		}
+		
+		po = cachedMap.get(value);
+		if(po == null)
+		{
+			StringBuilder whereClause = new StringBuilder("AD_Client_ID=? AND Value=?");
+			po = new Query(Env.getCtx(), MResourceType.Table_Name, whereClause.toString(), trxName)
+								.setParameters(AD_Client_ID, value)
+								.firstOnly();
+			cachedMap.put(value, po);
+		}
+		return po;
 	}
 	
-	static public String createMProduct(Properties ctx, MClient m_Client, MCMProduct cm_Product, MProduct m_Product, String trxName)
+	private static CCache<Integer,Map<String,MWarehouse>>c_MWarehouse = new CCache<Integer,Map<String,MWarehouse>>(Table_Name, 60);
+	
+	static public MWarehouse getMWarehouse(int AD_Client_ID, String value, String trxName)
+	{	
+		MWarehouse po = null;
+		Map<String,MWarehouse> cachedMap = c_MWarehouse.get(AD_Client_ID);
+		if (cachedMap == null)
+		{
+			cachedMap = new HashMap<String,MWarehouse>();
+			c_MWarehouse.put(AD_Client_ID, cachedMap);	
+		}
+		
+		po = cachedMap.get(value);
+		if(po == null)
+		{
+			StringBuilder whereClause = new StringBuilder("AD_Client_ID=? AND Value=?");
+			po = new Query(Env.getCtx(), MWarehouse.Table_Name, whereClause.toString(), trxName)
+								.setParameters(AD_Client_ID, value)
+								.firstOnly();
+			cachedMap.put(value, po);
+		}
+		return po;
+	}
+	
+	private static CCache<Integer,Map<String,MBPartner>>c_MBPartner = new CCache<Integer,Map<String,MBPartner>>(Table_Name, 60);
+	
+	static public MBPartner getMBPartner(int AD_Client_ID, String value, String trxName)
+	{	
+		MBPartner po = null;
+		Map<String,MBPartner> cachedMap = c_MBPartner.get(AD_Client_ID);
+		if (cachedMap == null)
+		{
+			cachedMap = new HashMap<String,MBPartner>();
+			c_MBPartner.put(AD_Client_ID, cachedMap);	
+		}
+		
+		po = cachedMap.get(value);
+		if(po == null)
+		{
+			StringBuilder whereClause = new StringBuilder("AD_Client_ID=? AND Value=?");
+			po = new Query(Env.getCtx(), MBPartner.Table_Name, whereClause.toString(), trxName)
+								.setParameters(AD_Client_ID, value)
+								.firstOnly();
+			cachedMap.put(value, po);
+		}
+		return po;
+	}
+	
+	static public MProduct createMProduct(Properties ctx, MClient m_Client, MCMProduct cm_Product, String trxName) throws Exception
 	{
-		if(m_Product == null)
-			m_Product = new MProduct(ctx, 0, trxName);
+		if(m_Client == null || cm_Product == null)
+			return null;
 		
-		if(m_Product.getM_Product_ID() > 0)
-			return Msg.getMsg(ctx, "JP_AlreadyRegistered");//That Data is already registered.
-		
+		String msg = null;
+		MProduct m_Product = new MProduct(ctx, 0, trxName);
 		PO.copyValues(cm_Product, m_Product);
 		m_Product.set_ValueNoCheck("AD_Client_ID", m_Client.getAD_Client_ID());
 		m_Product.setAD_Org_ID(0);
@@ -311,11 +383,10 @@ public class MCMProduct extends X_JP_CM_Product {
 		MProductCategory m_ProductCategory = getMProductCategory(m_Client.getAD_Client_ID(), cm_Product.getJP_Product_Category_Value(), trxName);
 		if(m_ProductCategory == null)
 		{
-			return Msg.getMsg(ctx, "JP_CouldNotRegister") //Could not register
-										+ " : " + Msg.getMsg(ctx, "invalid")
-										+ " : " + Msg.getElement(ctx, COLUMNNAME_JP_Product_Category_Value)
-										+ " = " + cm_Product.getJP_Product_Category_Value()
-										;
+			msg = Msg.getMsg(ctx, "invalid")
+						+ " : " + Msg.getElement(ctx, COLUMNNAME_JP_Product_Category_Value)
+						+ " = " + cm_Product.getJP_Product_Category_Value();
+			throw new Exception(msg);
 			
 		}else {
 			m_Product.setM_Product_Category_ID(m_ProductCategory.getM_Product_Category_ID());
@@ -325,11 +396,10 @@ public class MCMProduct extends X_JP_CM_Product {
 		MTaxCategory m_TaxCategory = getMTaxCategory(m_Client.getAD_Client_ID(), cm_Product.getJP_TaxCategory_Name(), trxName);
 		if(m_TaxCategory == null)
 		{
-			return Msg.getMsg(ctx, "JP_CouldNotRegister") //Could not register
-						+ " : " + Msg.getMsg(ctx, "invalid")
+			msg = Msg.getMsg(ctx, "invalid")
 						+ " : " + Msg.getElement(ctx, COLUMNNAME_JP_TaxCategory_Name)
-						+ " = " + cm_Product.getJP_TaxCategory_Name()
-						;
+						+ " = " + cm_Product.getJP_TaxCategory_Name();
+			throw new Exception(msg);
 			
 		}else {
 			m_Product.setC_TaxCategory_ID(m_TaxCategory.getC_TaxCategory_ID());
@@ -340,12 +410,11 @@ public class MCMProduct extends X_JP_CM_Product {
 			MRevenueRecognition m_RevenueRecognition = getMRevenueRecognition(m_Client.getAD_Client_ID(), cm_Product.getJP_RevenueRecognition_Name(), trxName);
 			if(m_RevenueRecognition == null)
 			{
-				return Msg.getMsg(ctx, "JP_CouldNotRegister") //Could not register
-							+ " : " + Msg.getMsg(ctx, "invalid")
+				msg = Msg.getMsg(ctx, "invalid")
 							+ " : " + Msg.getElement(ctx, COLUMNNAME_JP_RevenueRecognition_Name)
-							+ " = " + cm_Product.getJP_RevenueRecognition_Name()
-							;
-	
+							+ " = " + cm_Product.getJP_RevenueRecognition_Name();
+				throw new Exception(msg);
+				
 			}else {
 				m_Product.setC_RevenueRecognition_ID(m_RevenueRecognition.getC_RevenueRecognition_ID());
 			}
@@ -358,12 +427,11 @@ public class MCMProduct extends X_JP_CM_Product {
 			MMailText m_MailText = getMMailText(m_Client.getAD_Client_ID(), cm_Product.getJP_MailText_Name(), trxName);
 			if(m_MailText == null)
 			{
-				return Msg.getMsg(ctx, "JP_CouldNotRegister") //Could not register
-							+ " : " + Msg.getMsg(ctx, "invalid")
+				msg =  Msg.getMsg(ctx, "invalid")
 							+ " : " + Msg.getElement(ctx, COLUMNNAME_JP_MailText_Name)
-							+ " = " + cm_Product.getJP_MailText_Name()
-							;
-	
+							+ " = " + cm_Product.getJP_MailText_Name();
+				throw new Exception(msg);
+				
 			}else {
 				m_Product.setR_MailText_ID(m_MailText.getR_MailText_ID());
 			}
@@ -378,12 +446,11 @@ public class MCMProduct extends X_JP_CM_Product {
 			MFreightCategory m_FreightCategory = getMFreightCategory(m_Client.getAD_Client_ID(), cm_Product.getJP_FreightCategory_Value(), trxName);
 			if(m_FreightCategory == null)
 			{
-				return Msg.getMsg(ctx, "JP_CouldNotRegister") //Could not register
-							+ " : " + Msg.getMsg(ctx, "invalid")
+				msg = Msg.getMsg(ctx, "invalid")
 							+ " : " + Msg.getElement(ctx, COLUMNNAME_JP_FreightCategory_Value)
-							+ " = " + cm_Product.getJP_FreightCategory_Value()
-							;
-	
+							+ " = " + cm_Product.getJP_FreightCategory_Value();
+				throw new Exception(msg);
+				
 			}else {
 				m_Product.setM_FreightCategory_ID(m_FreightCategory.getM_FreightCategory_ID());
 			}
@@ -399,12 +466,11 @@ public class MCMProduct extends X_JP_CM_Product {
 			X_M_PartType m_PartType = getMPartType(m_Client.getAD_Client_ID(), cm_Product.getJP_PartType_Name(), trxName);
 			if(m_PartType == null)
 			{
-				return Msg.getMsg(ctx, "JP_CouldNotRegister") //Could not register
-							+ " : " + Msg.getMsg(ctx, "invalid")
+				msg = Msg.getMsg(ctx, "invalid")
 							+ " : " + Msg.getElement(ctx, COLUMNNAME_JP_PartType_Name)
-							+ " = " + cm_Product.getJP_PartType_Name()
-							;
-	
+							+ " = " + cm_Product.getJP_PartType_Name();
+				throw new Exception(msg);
+				
 			}else {
 				m_Product.setM_PartType_ID(m_PartType.getM_PartType_ID());
 			}
@@ -415,11 +481,10 @@ public class MCMProduct extends X_JP_CM_Product {
 			MLocator m_FreightCategory = getMLocator(m_Client.getAD_Client_ID(), cm_Product.getJP_Locator_Value(), trxName);
 			if(m_FreightCategory == null)
 			{
-				return Msg.getMsg(ctx, "JP_CouldNotRegister") //Could not register
-							+ " : " + Msg.getMsg(ctx, "invalid")
+				msg = Msg.getMsg(ctx, "invalid")
 							+ " : " + Msg.getElement(ctx, COLUMNNAME_JP_Locator_Value)
-							+ " = " + cm_Product.getJP_Locator_Value()
-							;
+							+ " = " + cm_Product.getJP_Locator_Value();
+				throw new Exception(msg);
 				
 			}else {
 				m_Product.setM_Locator_ID(m_FreightCategory.getM_Locator_ID());
@@ -448,12 +513,11 @@ public class MCMProduct extends X_JP_CM_Product {
 			MAttributeSet m_AttributeSet = getMAttributeSet(m_Client.getAD_Client_ID(), cm_Product.getJP_AttributeSet_Name(), trxName);
 			if(m_AttributeSet == null)
 			{
-				return Msg.getMsg(ctx, "JP_CouldNotRegister") //Could not register
-							+ " : " + Msg.getMsg(ctx, "invalid")
+				msg =  Msg.getMsg(ctx, "invalid")
 							+ " : " + Msg.getElement(ctx, COLUMNNAME_JP_AttributeSet_Name)
-							+ " = " + cm_Product.getJP_AttributeSet_Name()
-							;
-	
+							+ " = " + cm_Product.getJP_AttributeSet_Name();
+				throw new Exception(msg);
+				
 			}else {
 				m_Product.setM_AttributeSet_ID(m_AttributeSet.getM_AttributeSet_ID());
 			}
@@ -462,14 +526,160 @@ public class MCMProduct extends X_JP_CM_Product {
 		m_Product.setIsSelfService(cm_Product.isSelfService());
 		m_Product.setGroup1(cm_Product.getGroup1());
 		m_Product.setGroup2(cm_Product.getGroup2());
-		
 		m_Product.set_ValueNoCheck(MCMProduct.COLUMNNAME_JP_CM_Product_ID, cm_Product.getJP_CM_Product_ID());
-		try {
-			m_Product.saveEx(trxName);
-		}catch (Exception e) {
-			return m_Client.getName() + " : " + e.toString();
+		m_Product.saveEx(trxName);
+		
+		if(!Util.isEmpty(cm_Product.getBPartnerValue()))
+			createMProductPO(ctx, m_Client, cm_Product, m_Product, trxName);
+		
+		return m_Product;
+	}
+	
+	static public MProduct createResource(Properties ctx, MClient m_Client, MCMProduct cm_Product, String trxName) throws Exception
+	{	
+		if(m_Client == null || cm_Product == null)
+			return null;
+		
+		String msg = null;		
+		MResource m_Resource = new MResource(ctx, 0, trxName);
+		PO.copyValues(cm_Product, m_Resource);
+		m_Resource.set_ValueNoCheck("AD_Client_ID", m_Client.getAD_Client_ID());
+		m_Resource.setAD_Org_ID(0);
+		m_Resource.setValue(cm_Product.getValue());
+		m_Resource.setName(cm_Product.getName());
+		m_Resource.setDescription(cm_Product.getDescription());
+		//Set S_ResourceType_ID
+		MResourceType m_ResourceType = getMResourceType(m_Client.getAD_Client_ID(), cm_Product.getJP_ResourceType_Value(), trxName);
+		if(m_ResourceType == null)
+		{
+			msg = Msg.getMsg(ctx, "invalid")
+						+ " : " + Msg.getElement(ctx, COLUMNNAME_JP_ResourceType_Value)
+						+ " = " + cm_Product.getJP_ResourceType_Value();
+			throw new Exception(msg);
+			
+		}else {
+			m_Resource.setS_ResourceType_ID(m_ResourceType.getS_ResourceType_ID());
+		}
+		//Set M_Warehouse_ID
+		MWarehouse m_Warehouse = getMWarehouse(m_Client.getAD_Client_ID(), cm_Product.getJP_Warehouse_Value(), trxName);
+		if(m_Warehouse == null)
+		{
+			msg = Msg.getMsg(ctx, "invalid")
+						+ " : " + Msg.getElement(ctx, COLUMNNAME_JP_Warehouse_Value)
+						+ " = " + cm_Product.getJP_Warehouse_Value();
+			throw new Exception(msg);
+		}else {
+			m_Resource.setM_Warehouse_ID(m_Warehouse.getM_Warehouse_ID());
 		}
 		
-		return m_Client.getName() + " : " + Msg.getMsg(ctx, "Register");
+		m_Resource.saveEx(trxName);
+		
+		MProduct m_Product = m_Resource.getProduct();
+		m_Product.set_ValueNoCheck("AD_Client_ID", m_Client.getAD_Client_ID());
+		m_Product.saveEx(trxName);
+		
+		if(!Util.isEmpty(cm_Product.getBPartnerValue()))
+			createMProductPO(ctx, m_Client, cm_Product, m_Product, trxName);
+		
+		return m_Product;
+	}
+	
+	static public MProduct createExpense(Properties ctx, MClient m_Client, MCMProduct cm_Product, String trxName) throws Exception
+	{
+		if(m_Client == null || cm_Product == null)
+			return null;
+		
+		String msg = null;
+		MExpenseType m_ExpenseType = new MExpenseType(ctx, 0, trxName);
+		PO.copyValues(cm_Product, m_ExpenseType);
+		m_ExpenseType.set_ValueNoCheck("AD_Client_ID", m_Client.getAD_Client_ID());
+		m_ExpenseType.setAD_Org_ID(0);
+		m_ExpenseType.setValue(cm_Product.getValue());
+		m_ExpenseType.setName(cm_Product.getName());
+		m_ExpenseType.setDescription(cm_Product.getDescription());
+		m_ExpenseType.setC_UOM_ID(cm_Product.getC_UOM_ID());
+		//Set M_Product_Category_ID
+		MProductCategory m_ProductCategory = getMProductCategory(m_Client.getAD_Client_ID(), cm_Product.getJP_Product_Category_Value(), trxName);
+		if(m_ProductCategory == null)
+		{
+			msg =  Msg.getMsg(ctx, "invalid")
+						+ " : " + Msg.getElement(ctx, COLUMNNAME_JP_Product_Category_Value)
+						+ " = " + cm_Product.getJP_Product_Category_Value();
+			throw new Exception(msg);
+			
+		}else {
+			m_ExpenseType.setM_Product_Category_ID(m_ProductCategory.getM_Product_Category_ID());
+		}
+		//Set C_TaxCategory_ID
+		MTaxCategory m_TaxCategory = getMTaxCategory(m_Client.getAD_Client_ID(), cm_Product.getJP_TaxCategory_Name(), trxName);
+		if(m_TaxCategory == null)
+		{
+			msg =  Msg.getMsg(ctx, "invalid")
+						+ " : " + Msg.getElement(ctx, COLUMNNAME_JP_TaxCategory_Name)
+						+ " = " + cm_Product.getJP_TaxCategory_Name();
+			throw new Exception(msg);
+			
+		}else {
+			m_ExpenseType.setC_TaxCategory_ID(m_TaxCategory.getC_TaxCategory_ID());
+		}
+		
+		m_ExpenseType.saveEx(trxName);
+		
+		MProduct m_Product = m_ExpenseType.getProduct();
+		m_Product.set_ValueNoCheck("AD_Client_ID", m_Client.getAD_Client_ID());
+		m_Product.saveEx(trxName);
+		
+		if(!Util.isEmpty(cm_Product.getBPartnerValue()))
+		{
+			try {
+				createMProductPO(ctx, m_Client, cm_Product, m_Product, trxName);
+			}catch (Exception e) {
+				;//Nothing to do
+			}
+		}
+		
+		return m_Product;
+	}
+	
+	static public MProductPO createMProductPO(Properties ctx, MClient m_Client, MCMProduct cm_Product, MProduct m_Product, String trxName)throws Exception
+	{	
+		if(m_Client == null || cm_Product == null || m_Product == null)
+			return null;
+		
+		String msg = null;
+		MBPartner m_BPartner = getMBPartner(m_Client.getAD_Client_ID(), cm_Product.getBPartnerValue(), trxName);
+		if(m_BPartner == null)
+		{
+			msg = Msg.getMsg(ctx, "invalid")
+						+ " : " + Msg.getElement(ctx, COLUMNNAME_BPartnerValue)
+						+ " = " + cm_Product.getBPartnerValue();
+			throw new Exception(msg);
+		}
+		
+		MProductPO m_ProductPO = new MProductPO(ctx, 0, trxName);
+		PO.copyValues(cm_Product, m_ProductPO);
+		m_ProductPO.set_ValueNoCheck("AD_Client_ID", m_Client.getAD_Client_ID());
+		m_ProductPO.setAD_Org_ID(0);
+		m_ProductPO.setM_Product_ID(m_Product.getM_Product_ID());
+		m_ProductPO.setC_BPartner_ID(m_BPartner.getC_BPartner_ID());
+		m_ProductPO.setQualityRating(cm_Product.getQualityRating());
+		m_ProductPO.setIsCurrentVendor(cm_Product.isCurrentVendor());
+		m_ProductPO.setUPC(cm_Product.getJP_VendorUPC());
+		m_ProductPO.setC_Currency_ID(cm_Product.getC_Currency_ID());
+		m_ProductPO.setPriceList(cm_Product.getPriceList());
+		m_ProductPO.setPriceEffective(cm_Product.getPriceEffective());
+		m_ProductPO.setPricePO(cm_Product.getPricePO());
+		m_ProductPO.setRoyaltyAmt(cm_Product.getRoyaltyAmt());
+		m_ProductPO.setC_UOM_ID(cm_Product.getJP_VendorUOM_ID());
+		m_ProductPO.setOrder_Min(cm_Product.getOrder_Min());
+		m_ProductPO.setOrder_Pack(cm_Product.getOrder_Pack());
+		m_ProductPO.setDeliveryTime_Promised(cm_Product.getDeliveryTime_Promised());
+		m_ProductPO.setCostPerOrder(cm_Product.getCostPerOrder());
+		m_ProductPO.setVendorProductNo(cm_Product.getVendorProductNo());
+		m_ProductPO.setVendorCategory(cm_Product.getVendorCategory());
+		m_ProductPO.setManufacturer(cm_Product.getManufacturer());
+		m_ProductPO.saveEx(trxName);
+		
+		return m_ProductPO;
 	}
 }

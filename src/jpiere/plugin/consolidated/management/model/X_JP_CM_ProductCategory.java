@@ -31,7 +31,7 @@ public class X_JP_CM_ProductCategory extends PO implements I_JP_CM_ProductCatego
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20241123L;
+	private static final long serialVersionUID = 20241124L;
 
     /** Standard Constructor */
     public X_JP_CM_ProductCategory (Properties ctx, int JP_CM_ProductCategory_ID, String trxName)

@@ -35,7 +35,7 @@ public class X_JP_CM_Product extends PO implements I_JP_CM_Product, I_Persistent
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20241123L;
+	private static final long serialVersionUID = 20241124L;
 
     /** Standard Constructor */
     public X_JP_CM_Product (Properties ctx, int JP_CM_Product_ID, String trxName)
@@ -43,12 +43,13 @@ public class X_JP_CM_Product extends PO implements I_JP_CM_Product, I_Persistent
       super (ctx, JP_CM_Product_ID, trxName);
       /** if (JP_CM_Product_ID == 0)
         {
-			setC_UOM_ID (0);
 			setDiscontinued (false);
 // N
 			setIsAutoProduce (false);
 // N
 			setIsBOM (false);
+// N
+			setIsCurrentVendor (false);
 // N
 			setIsDropShip (false);
 // N
@@ -82,7 +83,6 @@ public class X_JP_CM_Product extends PO implements I_JP_CM_Product, I_Persistent
 // N
 			setJP_CM_ProductCategory_ID (0);
 			setJP_CM_Product_ID (0);
-			setJP_Product_Category_Value (null);
 			setJP_TaxCategory_Name (null);
 			setLowLevel (0);
 // 0
@@ -99,12 +99,13 @@ public class X_JP_CM_Product extends PO implements I_JP_CM_Product, I_Persistent
       super (ctx, JP_CM_Product_ID, trxName, virtualColumns);
       /** if (JP_CM_Product_ID == 0)
         {
-			setC_UOM_ID (0);
 			setDiscontinued (false);
 // N
 			setIsAutoProduce (false);
 // N
 			setIsBOM (false);
+// N
+			setIsCurrentVendor (false);
 // N
 			setIsDropShip (false);
 // N
@@ -138,7 +139,6 @@ public class X_JP_CM_Product extends PO implements I_JP_CM_Product, I_Persistent
 // N
 			setJP_CM_ProductCategory_ID (0);
 			setJP_CM_Product_ID (0);
-			setJP_Product_Category_Value (null);
 			setJP_TaxCategory_Name (null);
 			setLowLevel (0);
 // 0
@@ -155,12 +155,13 @@ public class X_JP_CM_Product extends PO implements I_JP_CM_Product, I_Persistent
       super (ctx, JP_CM_Product_UU, trxName);
       /** if (JP_CM_Product_UU == null)
         {
-			setC_UOM_ID (0);
 			setDiscontinued (false);
 // N
 			setIsAutoProduce (false);
 // N
 			setIsBOM (false);
+// N
+			setIsCurrentVendor (false);
 // N
 			setIsDropShip (false);
 // N
@@ -194,7 +195,6 @@ public class X_JP_CM_Product extends PO implements I_JP_CM_Product, I_Persistent
 // N
 			setJP_CM_ProductCategory_ID (0);
 			setJP_CM_Product_ID (0);
-			setJP_Product_Category_Value (null);
 			setJP_TaxCategory_Name (null);
 			setLowLevel (0);
 // 0
@@ -211,12 +211,13 @@ public class X_JP_CM_Product extends PO implements I_JP_CM_Product, I_Persistent
       super (ctx, JP_CM_Product_UU, trxName, virtualColumns);
       /** if (JP_CM_Product_UU == null)
         {
-			setC_UOM_ID (0);
 			setDiscontinued (false);
 // N
 			setIsAutoProduce (false);
 // N
 			setIsBOM (false);
+// N
+			setIsCurrentVendor (false);
 // N
 			setIsDropShip (false);
 // N
@@ -250,7 +251,6 @@ public class X_JP_CM_Product extends PO implements I_JP_CM_Product, I_Persistent
 // N
 			setJP_CM_ProductCategory_ID (0);
 			setJP_CM_Product_ID (0);
-			setJP_Product_Category_Value (null);
 			setJP_TaxCategory_Name (null);
 			setLowLevel (0);
 // 0
@@ -288,6 +288,50 @@ public class X_JP_CM_Product extends PO implements I_JP_CM_Product, I_Persistent
         .append(get_ID()).append(",Name=").append(getName()).append("]");
       return sb.toString();
     }
+
+	/** Set Business Partner Key.
+		@param BPartnerValue Key of the Business Partner
+	*/
+	public void setBPartnerValue (String BPartnerValue)
+	{
+		set_Value (COLUMNNAME_BPartnerValue, BPartnerValue);
+	}
+
+	/** Get Business Partner Key.
+		@return Key of the Business Partner
+	  */
+	public String getBPartnerValue()
+	{
+		return (String)get_Value(COLUMNNAME_BPartnerValue);
+	}
+
+	public org.compiere.model.I_C_Currency getC_Currency() throws RuntimeException
+	{
+		return (org.compiere.model.I_C_Currency)MTable.get(getCtx(), org.compiere.model.I_C_Currency.Table_ID)
+			.getPO(getC_Currency_ID(), get_TrxName());
+	}
+
+	/** Set Currency.
+		@param C_Currency_ID The Currency for this record
+	*/
+	public void setC_Currency_ID (int C_Currency_ID)
+	{
+		if (C_Currency_ID < 1)
+			set_Value (COLUMNNAME_C_Currency_ID, null);
+		else
+			set_Value (COLUMNNAME_C_Currency_ID, Integer.valueOf(C_Currency_ID));
+	}
+
+	/** Get Currency.
+		@return The Currency for this record
+	  */
+	public int getC_Currency_ID()
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_C_Currency_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
 
 	public org.compiere.model.I_C_UOM getC_UOM() throws RuntimeException
 	{
@@ -333,6 +377,25 @@ public class X_JP_CM_Product extends PO implements I_JP_CM_Product, I_Persistent
 		return (String)get_Value(COLUMNNAME_Classification);
 	}
 
+	/** Set Cost per Order.
+		@param CostPerOrder Fixed Cost Per Order
+	*/
+	public void setCostPerOrder (BigDecimal CostPerOrder)
+	{
+		set_Value (COLUMNNAME_CostPerOrder, CostPerOrder);
+	}
+
+	/** Get Cost per Order.
+		@return Fixed Cost Per Order
+	  */
+	public BigDecimal getCostPerOrder()
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_CostPerOrder);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
 	/** Set Customs Tariff Number.
 		@param CustomsTariffNumber Customs Tariff Number, usually the HS-Code
 	*/
@@ -347,6 +410,25 @@ public class X_JP_CM_Product extends PO implements I_JP_CM_Product, I_Persistent
 	public String getCustomsTariffNumber()
 	{
 		return (String)get_Value(COLUMNNAME_CustomsTariffNumber);
+	}
+
+	/** Set Promised Delivery Time.
+		@param DeliveryTime_Promised Promised days between order and delivery
+	*/
+	public void setDeliveryTime_Promised (int DeliveryTime_Promised)
+	{
+		set_Value (COLUMNNAME_DeliveryTime_Promised, Integer.valueOf(DeliveryTime_Promised));
+	}
+
+	/** Get Promised Delivery Time.
+		@return Promised days between order and delivery
+	  */
+	public int getDeliveryTime_Promised()
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_DeliveryTime_Promised);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
 	}
 
 	/** Set Description.
@@ -573,6 +655,29 @@ public class X_JP_CM_Product extends PO implements I_JP_CM_Product, I_Persistent
 	public boolean isBOM()
 	{
 		Object oo = get_Value(COLUMNNAME_IsBOM);
+		if (oo != null)
+		{
+			 if (oo instanceof Boolean)
+				 return ((Boolean)oo).booleanValue();
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
+	/** Set Current vendor.
+		@param IsCurrentVendor Use this Vendor for pricing and stock replenishment
+	*/
+	public void setIsCurrentVendor (boolean IsCurrentVendor)
+	{
+		set_Value (COLUMNNAME_IsCurrentVendor, Boolean.valueOf(IsCurrentVendor));
+	}
+
+	/** Get Current vendor.
+		@return Use this Vendor for pricing and stock replenishment
+	  */
+	public boolean isCurrentVendor()
+	{
+		Object oo = get_Value(COLUMNNAME_IsCurrentVendor);
 		if (oo != null)
 		{
 			 if (oo instanceof Boolean)
@@ -1085,6 +1190,21 @@ public class X_JP_CM_Product extends PO implements I_JP_CM_Product, I_Persistent
 		return (String)get_Value(COLUMNNAME_JP_Product_Category_Value);
 	}
 
+	/** Set Resource Type(Value).
+		@param JP_ResourceType_Value Resource Type(Value)
+	*/
+	public void setJP_ResourceType_Value (String JP_ResourceType_Value)
+	{
+		set_Value (COLUMNNAME_JP_ResourceType_Value, JP_ResourceType_Value);
+	}
+
+	/** Get Resource Type(Value).
+		@return Resource Type(Value)	  */
+	public String getJP_ResourceType_Value()
+	{
+		return (String)get_Value(COLUMNNAME_JP_ResourceType_Value);
+	}
+
 	/** Set Revenue Recognition(Name).
 		@param JP_RevenueRecognition_Name Method for recording revenue
 	*/
@@ -1117,6 +1237,65 @@ public class X_JP_CM_Product extends PO implements I_JP_CM_Product, I_Persistent
 		return (String)get_Value(COLUMNNAME_JP_TaxCategory_Name);
 	}
 
+	public org.compiere.model.I_C_UOM getJP_VendorUOM() throws RuntimeException
+	{
+		return (org.compiere.model.I_C_UOM)MTable.get(getCtx(), org.compiere.model.I_C_UOM.Table_ID)
+			.getPO(getJP_VendorUOM_ID(), get_TrxName());
+	}
+
+	/** Set UOM(Vendor).
+		@param JP_VendorUOM_ID Unit of Measure
+	*/
+	public void setJP_VendorUOM_ID (int JP_VendorUOM_ID)
+	{
+		if (JP_VendorUOM_ID < 1)
+			set_Value (COLUMNNAME_JP_VendorUOM_ID, null);
+		else
+			set_Value (COLUMNNAME_JP_VendorUOM_ID, Integer.valueOf(JP_VendorUOM_ID));
+	}
+
+	/** Get UOM(Vendor).
+		@return Unit of Measure
+	  */
+	public int getJP_VendorUOM_ID()
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_JP_VendorUOM_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	/** Set UPC/EAN(Vendor).
+		@param JP_VendorUPC Bar Code (Universal Product Code or its superset European Article Number)
+	*/
+	public void setJP_VendorUPC (String JP_VendorUPC)
+	{
+		set_Value (COLUMNNAME_JP_VendorUPC, JP_VendorUPC);
+	}
+
+	/** Get UPC/EAN(Vendor).
+		@return Bar Code (Universal Product Code or its superset European Article Number)
+	  */
+	public String getJP_VendorUPC()
+	{
+		return (String)get_Value(COLUMNNAME_JP_VendorUPC);
+	}
+
+	/** Set Org Warehouse(Search Key).
+		@param JP_Warehouse_Value Org Warehouse(Search Key)
+	*/
+	public void setJP_Warehouse_Value (String JP_Warehouse_Value)
+	{
+		set_Value (COLUMNNAME_JP_Warehouse_Value, JP_Warehouse_Value);
+	}
+
+	/** Get Org Warehouse(Search Key).
+		@return Org Warehouse(Search Key)	  */
+	public String getJP_Warehouse_Value()
+	{
+		return (String)get_Value(COLUMNNAME_JP_Warehouse_Value);
+	}
+
 	/** Set Low Level.
 		@param LowLevel The Low Level is used to calculate the material plan and determines if a net requirement should be exploited
 	*/
@@ -1136,6 +1315,22 @@ public class X_JP_CM_Product extends PO implements I_JP_CM_Product, I_Persistent
 		return ii.intValue();
 	}
 
+	/** Set Manufacturer.
+		@param Manufacturer Manufacturer of the Product
+	*/
+	public void setManufacturer (String Manufacturer)
+	{
+		set_Value (COLUMNNAME_Manufacturer, Manufacturer);
+	}
+
+	/** Get Manufacturer.
+		@return Manufacturer of the Product
+	  */
+	public String getManufacturer()
+	{
+		return (String)get_Value(COLUMNNAME_Manufacturer);
+	}
+
 	/** Set Name.
 		@param Name Alphanumeric identifier of the entity
 	*/
@@ -1150,6 +1345,98 @@ public class X_JP_CM_Product extends PO implements I_JP_CM_Product, I_Persistent
 	public String getName()
 	{
 		return (String)get_Value(COLUMNNAME_Name);
+	}
+
+	/** Set Minimum Order Qty.
+		@param Order_Min Minimum order quantity in UOM
+	*/
+	public void setOrder_Min (BigDecimal Order_Min)
+	{
+		set_Value (COLUMNNAME_Order_Min, Order_Min);
+	}
+
+	/** Get Minimum Order Qty.
+		@return Minimum order quantity in UOM
+	  */
+	public BigDecimal getOrder_Min()
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Order_Min);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	/** Set Order Pack Qty.
+		@param Order_Pack Package order size in UOM (e.g. order set of 5 units)
+	*/
+	public void setOrder_Pack (BigDecimal Order_Pack)
+	{
+		set_Value (COLUMNNAME_Order_Pack, Order_Pack);
+	}
+
+	/** Get Order Pack Qty.
+		@return Package order size in UOM (e.g. order set of 5 units)
+	  */
+	public BigDecimal getOrder_Pack()
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Order_Pack);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	/** Set Price effective.
+		@param PriceEffective Effective Date of Price
+	*/
+	public void setPriceEffective (Timestamp PriceEffective)
+	{
+		set_Value (COLUMNNAME_PriceEffective, PriceEffective);
+	}
+
+	/** Get Price effective.
+		@return Effective Date of Price
+	  */
+	public Timestamp getPriceEffective()
+	{
+		return (Timestamp)get_Value(COLUMNNAME_PriceEffective);
+	}
+
+	/** Set List Price.
+		@param PriceList List Price
+	*/
+	public void setPriceList (BigDecimal PriceList)
+	{
+		set_Value (COLUMNNAME_PriceList, PriceList);
+	}
+
+	/** Get List Price.
+		@return List Price
+	  */
+	public BigDecimal getPriceList()
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_PriceList);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	/** Set PO Price.
+		@param PricePO Price based on a purchase order
+	*/
+	public void setPricePO (BigDecimal PricePO)
+	{
+		set_Value (COLUMNNAME_PricePO, PricePO);
+	}
+
+	/** Get PO Price.
+		@return Price based on a purchase order
+	  */
+	public BigDecimal getPricePO()
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_PricePO);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
 	}
 
 	/** Set Process Now.
@@ -1203,6 +1490,44 @@ public class X_JP_CM_Product extends PO implements I_JP_CM_Product, I_Persistent
 	public String getProductType()
 	{
 		return (String)get_Value(COLUMNNAME_ProductType);
+	}
+
+	/** Set Quality Rating.
+		@param QualityRating Method for rating vendors
+	*/
+	public void setQualityRating (int QualityRating)
+	{
+		set_Value (COLUMNNAME_QualityRating, Integer.valueOf(QualityRating));
+	}
+
+	/** Get Quality Rating.
+		@return Method for rating vendors
+	  */
+	public int getQualityRating()
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_QualityRating);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	/** Set Royalty Amount.
+		@param RoyaltyAmt (Included) Amount for copyright, etc.
+	*/
+	public void setRoyaltyAmt (BigDecimal RoyaltyAmt)
+	{
+		set_Value (COLUMNNAME_RoyaltyAmt, RoyaltyAmt);
+	}
+
+	/** Get Royalty Amount.
+		@return (Included) Amount for copyright, etc.
+	  */
+	public BigDecimal getRoyaltyAmt()
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_RoyaltyAmt);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
 	}
 
 	/** Set SKU.
@@ -1355,6 +1680,38 @@ public class X_JP_CM_Product extends PO implements I_JP_CM_Product, I_Persistent
     {
         return new KeyNamePair(get_ID(), getValue());
     }
+
+	/** Set Partner Category.
+		@param VendorCategory Product Category of the Business Partner
+	*/
+	public void setVendorCategory (String VendorCategory)
+	{
+		set_Value (COLUMNNAME_VendorCategory, VendorCategory);
+	}
+
+	/** Get Partner Category.
+		@return Product Category of the Business Partner
+	  */
+	public String getVendorCategory()
+	{
+		return (String)get_Value(COLUMNNAME_VendorCategory);
+	}
+
+	/** Set Partner Product Key.
+		@param VendorProductNo Product Key of the Business Partner
+	*/
+	public void setVendorProductNo (String VendorProductNo)
+	{
+		set_Value (COLUMNNAME_VendorProductNo, VendorProductNo);
+	}
+
+	/** Get Partner Product Key.
+		@return Product Key of the Business Partner
+	  */
+	public String getVendorProductNo()
+	{
+		return (String)get_Value(COLUMNNAME_VendorProductNo);
+	}
 
 	/** Set Version No.
 		@param VersionNo Version Number

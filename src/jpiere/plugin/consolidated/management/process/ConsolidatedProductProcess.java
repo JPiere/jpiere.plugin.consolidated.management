@@ -104,32 +104,57 @@ public class ConsolidatedProductProcess extends SvrProcess {
 		MCMProduct cm_Product = null;
 		for(int JP_CM_Product_ID : JP_CM_Product_IDs)
 		{
+			cm_Product = new MCMProduct(getCtx(), JP_CM_Product_ID, get_TrxName());		
+			if(MCMProduct.PRODUCTTYPE_Asset.equals(cm_Product.getProductType()))//Not supported Asset
+					continue;
+			
 			counter++;
-			cm_Product = new MCMProduct(getCtx(), JP_CM_Product_ID, get_TrxName());
 			if(processUI != null)
 				processUI.statusUpdate(counter + " : " + cm_Product.getValue());
 			
 			for(int AD_Client_ID : AD_Client_IDs)
 			{
+				msg = null;
 				MClient m_Client = MClient.get(AD_Client_ID);
 				MProduct m_Product = MCMProduct.getMProduct(AD_Client_ID, cm_Product.getValue(), get_TrxName());
 				if(m_Product == null)
 				{
-					m_Product = new MProduct(getCtx(), 0, get_TrxName());
-					msg = MCMProduct.createMProduct(getCtx(), m_Client, cm_Product, m_Product, get_TrxName());
-					if(m_Product.getM_Product_ID() > 0)
+					try 
 					{
+						if(MCMProduct.PRODUCTTYPE_Resource.equals(cm_Product.getProductType()))
+						{
+							m_Product = MCMProduct.createResource(getCtx(), m_Client, cm_Product, get_TrxName());
+							
+						}else if(MCMProduct.PRODUCTTYPE_ExpenseType.equals(cm_Product.getProductType())) {
+							
+							m_Product = MCMProduct.createExpense(getCtx(), m_Client, cm_Product, get_TrxName());
+							
+						}else if(MCMProduct.PRODUCTTYPE_Item.equals(cm_Product.getProductType())
+								|| MCMProduct.PRODUCTTYPE_Service.equals(cm_Product.getProductType()) ){
+							
+							m_Product = MCMProduct.createMProduct(getCtx(), m_Client, cm_Product, get_TrxName());
+							
+						}else {
+							continue;
+						}
+					
+					}catch (Exception e) {
+						msg = e.getMessage();
+					}
+					
+					if(m_Product == null)
+					{
+						isSuccess = false;
+						failure++;
+					}else {
 						isSuccess = true;
 						register++;
 						commitEx();
-					}else { 
-						isSuccess = false;
-						failure++;
 					}
 					
 					if(isSuccessLog || !isSuccess)
 					{
-						msg = cm_Product.getValue() + " : " + m_Client.getName() + " : " + msg;
+						msg = cm_Product.getValue() + " : " + m_Client.getName() + " : " + (isSuccess? Msg.getMsg(getCtx(), "Register") : Msg.getMsg(getCtx(), "JP_CouldNotRegister")+ " : " + msg);
 						addLog(msg);
 					}
 					

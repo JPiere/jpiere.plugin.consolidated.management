@@ -64,6 +64,34 @@ public interface I_JP_CM_Product
 	  */
 	public int getAD_Org_ID();
 
+    /** Column name BPartnerValue */
+    public static final String COLUMNNAME_BPartnerValue = "BPartnerValue";
+
+	/** Set Business Partner Key.
+	  * Key of the Business Partner
+	  */
+	public void setBPartnerValue (String BPartnerValue);
+
+	/** Get Business Partner Key.
+	  * Key of the Business Partner
+	  */
+	public String getBPartnerValue();
+
+    /** Column name C_Currency_ID */
+    public static final String COLUMNNAME_C_Currency_ID = "C_Currency_ID";
+
+	/** Set Currency.
+	  * The Currency for this record
+	  */
+	public void setC_Currency_ID (int C_Currency_ID);
+
+	/** Get Currency.
+	  * The Currency for this record
+	  */
+	public int getC_Currency_ID();
+
+	public org.compiere.model.I_C_Currency getC_Currency() throws RuntimeException;
+
     /** Column name C_UOM_ID */
     public static final String COLUMNNAME_C_UOM_ID = "C_UOM_ID";
 
@@ -91,6 +119,19 @@ public interface I_JP_CM_Product
 	  * Classification for grouping
 	  */
 	public String getClassification();
+
+    /** Column name CostPerOrder */
+    public static final String COLUMNNAME_CostPerOrder = "CostPerOrder";
+
+	/** Set Cost per Order.
+	  * Fixed Cost Per Order
+	  */
+	public void setCostPerOrder (BigDecimal CostPerOrder);
+
+	/** Get Cost per Order.
+	  * Fixed Cost Per Order
+	  */
+	public BigDecimal getCostPerOrder();
 
     /** Column name Created */
     public static final String COLUMNNAME_Created = "Created";
@@ -120,6 +161,19 @@ public interface I_JP_CM_Product
 	  * Customs Tariff Number, usually the HS-Code
 	  */
 	public String getCustomsTariffNumber();
+
+    /** Column name DeliveryTime_Promised */
+    public static final String COLUMNNAME_DeliveryTime_Promised = "DeliveryTime_Promised";
+
+	/** Set Promised Delivery Time.
+	  * Promised days between order and delivery
+	  */
+	public void setDeliveryTime_Promised (int DeliveryTime_Promised);
+
+	/** Get Promised Delivery Time.
+	  * Promised days between order and delivery
+	  */
+	public int getDeliveryTime_Promised();
 
     /** Column name Description */
     public static final String COLUMNNAME_Description = "Description";
@@ -294,6 +348,19 @@ public interface I_JP_CM_Product
 	  * Bill of Materials
 	  */
 	public boolean isBOM();
+
+    /** Column name IsCurrentVendor */
+    public static final String COLUMNNAME_IsCurrentVendor = "IsCurrentVendor";
+
+	/** Set Current vendor.
+	  * Use this Vendor for pricing and stock replenishment
+	  */
+	public void setIsCurrentVendor (boolean IsCurrentVendor);
+
+	/** Get Current vendor.
+	  * Use this Vendor for pricing and stock replenishment
+	  */
+	public boolean isCurrentVendor();
 
     /** Column name IsDropShip */
     public static final String COLUMNNAME_IsDropShip = "IsDropShip";
@@ -593,6 +660,15 @@ public interface I_JP_CM_Product
 	  */
 	public String getJP_Product_Category_Value();
 
+    /** Column name JP_ResourceType_Value */
+    public static final String COLUMNNAME_JP_ResourceType_Value = "JP_ResourceType_Value";
+
+	/** Set Resource Type(Value)	  */
+	public void setJP_ResourceType_Value (String JP_ResourceType_Value);
+
+	/** Get Resource Type(Value)	  */
+	public String getJP_ResourceType_Value();
+
     /** Column name JP_RevenueRecognition_Name */
     public static final String COLUMNNAME_JP_RevenueRecognition_Name = "JP_RevenueRecognition_Name";
 
@@ -619,6 +695,43 @@ public interface I_JP_CM_Product
 	  */
 	public String getJP_TaxCategory_Name();
 
+    /** Column name JP_VendorUOM_ID */
+    public static final String COLUMNNAME_JP_VendorUOM_ID = "JP_VendorUOM_ID";
+
+	/** Set UOM(Vendor).
+	  * Unit of Measure
+	  */
+	public void setJP_VendorUOM_ID (int JP_VendorUOM_ID);
+
+	/** Get UOM(Vendor).
+	  * Unit of Measure
+	  */
+	public int getJP_VendorUOM_ID();
+
+	public org.compiere.model.I_C_UOM getJP_VendorUOM() throws RuntimeException;
+
+    /** Column name JP_VendorUPC */
+    public static final String COLUMNNAME_JP_VendorUPC = "JP_VendorUPC";
+
+	/** Set UPC/EAN(Vendor).
+	  * Bar Code (Universal Product Code or its superset European Article Number)
+	  */
+	public void setJP_VendorUPC (String JP_VendorUPC);
+
+	/** Get UPC/EAN(Vendor).
+	  * Bar Code (Universal Product Code or its superset European Article Number)
+	  */
+	public String getJP_VendorUPC();
+
+    /** Column name JP_Warehouse_Value */
+    public static final String COLUMNNAME_JP_Warehouse_Value = "JP_Warehouse_Value";
+
+	/** Set Org Warehouse(Search Key)	  */
+	public void setJP_Warehouse_Value (String JP_Warehouse_Value);
+
+	/** Get Org Warehouse(Search Key)	  */
+	public String getJP_Warehouse_Value();
+
     /** Column name LowLevel */
     public static final String COLUMNNAME_LowLevel = "LowLevel";
 
@@ -632,6 +745,19 @@ public interface I_JP_CM_Product
 	  */
 	public int getLowLevel();
 
+    /** Column name Manufacturer */
+    public static final String COLUMNNAME_Manufacturer = "Manufacturer";
+
+	/** Set Manufacturer.
+	  * Manufacturer of the Product
+	  */
+	public void setManufacturer (String Manufacturer);
+
+	/** Get Manufacturer.
+	  * Manufacturer of the Product
+	  */
+	public String getManufacturer();
+
     /** Column name Name */
     public static final String COLUMNNAME_Name = "Name";
 
@@ -644,6 +770,71 @@ public interface I_JP_CM_Product
 	  * Alphanumeric identifier of the entity
 	  */
 	public String getName();
+
+    /** Column name Order_Min */
+    public static final String COLUMNNAME_Order_Min = "Order_Min";
+
+	/** Set Minimum Order Qty.
+	  * Minimum order quantity in UOM
+	  */
+	public void setOrder_Min (BigDecimal Order_Min);
+
+	/** Get Minimum Order Qty.
+	  * Minimum order quantity in UOM
+	  */
+	public BigDecimal getOrder_Min();
+
+    /** Column name Order_Pack */
+    public static final String COLUMNNAME_Order_Pack = "Order_Pack";
+
+	/** Set Order Pack Qty.
+	  * Package order size in UOM (e.g. order set of 5 units)
+	  */
+	public void setOrder_Pack (BigDecimal Order_Pack);
+
+	/** Get Order Pack Qty.
+	  * Package order size in UOM (e.g. order set of 5 units)
+	  */
+	public BigDecimal getOrder_Pack();
+
+    /** Column name PriceEffective */
+    public static final String COLUMNNAME_PriceEffective = "PriceEffective";
+
+	/** Set Price effective.
+	  * Effective Date of Price
+	  */
+	public void setPriceEffective (Timestamp PriceEffective);
+
+	/** Get Price effective.
+	  * Effective Date of Price
+	  */
+	public Timestamp getPriceEffective();
+
+    /** Column name PriceList */
+    public static final String COLUMNNAME_PriceList = "PriceList";
+
+	/** Set List Price.
+	  * List Price
+	  */
+	public void setPriceList (BigDecimal PriceList);
+
+	/** Get List Price.
+	  * List Price
+	  */
+	public BigDecimal getPriceList();
+
+    /** Column name PricePO */
+    public static final String COLUMNNAME_PricePO = "PricePO";
+
+	/** Set PO Price.
+	  * Price based on a purchase order
+	  */
+	public void setPricePO (BigDecimal PricePO);
+
+	/** Get PO Price.
+	  * Price based on a purchase order
+	  */
+	public BigDecimal getPricePO();
 
     /** Column name Processing */
     public static final String COLUMNNAME_Processing = "Processing";
@@ -666,6 +857,32 @@ public interface I_JP_CM_Product
 	  * Type of product
 	  */
 	public String getProductType();
+
+    /** Column name QualityRating */
+    public static final String COLUMNNAME_QualityRating = "QualityRating";
+
+	/** Set Quality Rating.
+	  * Method for rating vendors
+	  */
+	public void setQualityRating (int QualityRating);
+
+	/** Get Quality Rating.
+	  * Method for rating vendors
+	  */
+	public int getQualityRating();
+
+    /** Column name RoyaltyAmt */
+    public static final String COLUMNNAME_RoyaltyAmt = "RoyaltyAmt";
+
+	/** Set Royalty Amount.
+	  * (Included) Amount for copyright, etc.
+	  */
+	public void setRoyaltyAmt (BigDecimal RoyaltyAmt);
+
+	/** Get Royalty Amount.
+	  * (Included) Amount for copyright, etc.
+	  */
+	public BigDecimal getRoyaltyAmt();
 
     /** Column name SKU */
     public static final String COLUMNNAME_SKU = "SKU";
@@ -786,6 +1003,32 @@ public interface I_JP_CM_Product
 	  * Search key for the record in the format required - must be unique
 	  */
 	public String getValue();
+
+    /** Column name VendorCategory */
+    public static final String COLUMNNAME_VendorCategory = "VendorCategory";
+
+	/** Set Partner Category.
+	  * Product Category of the Business Partner
+	  */
+	public void setVendorCategory (String VendorCategory);
+
+	/** Get Partner Category.
+	  * Product Category of the Business Partner
+	  */
+	public String getVendorCategory();
+
+    /** Column name VendorProductNo */
+    public static final String COLUMNNAME_VendorProductNo = "VendorProductNo";
+
+	/** Set Partner Product Key.
+	  * Product Key of the Business Partner
+	  */
+	public void setVendorProductNo (String VendorProductNo);
+
+	/** Get Partner Product Key.
+	  * Product Key of the Business Partner
+	  */
+	public String getVendorProductNo();
 
     /** Column name VersionNo */
     public static final String COLUMNNAME_VersionNo = "VersionNo";
