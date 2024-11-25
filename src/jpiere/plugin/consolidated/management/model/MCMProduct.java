@@ -530,7 +530,13 @@ public class MCMProduct extends X_JP_CM_Product {
 		m_Product.saveEx(trxName);
 		
 		if(!Util.isEmpty(cm_Product.getBPartnerValue()))
-			createMProductPO(ctx, m_Client, cm_Product, m_Product, trxName);
+		{
+			try {
+				createMProductPO(ctx, m_Client, cm_Product, m_Product, trxName);
+			}catch (Exception e) {
+				;// Nothing to do.
+			}
+		}
 		
 		return m_Product;
 	}
@@ -541,7 +547,10 @@ public class MCMProduct extends X_JP_CM_Product {
 			return null;
 		
 		String msg = null;		
-		MResource m_Resource = new MResource(ctx, 0, trxName);
+		Properties cloneCtx = (Properties)ctx.clone();
+		cloneCtx.setProperty("#AD_Client_ID", String.valueOf(m_Client.getAD_Client_ID()));
+		
+		MResource m_Resource = new MResource(cloneCtx, 0, trxName);
 		PO.copyValues(cm_Product, m_Resource);
 		m_Resource.set_ValueNoCheck("AD_Client_ID", m_Client.getAD_Client_ID());
 		m_Resource.setAD_Org_ID(0);
@@ -573,13 +582,18 @@ public class MCMProduct extends X_JP_CM_Product {
 		}
 		
 		m_Resource.saveEx(trxName);
-		
 		MProduct m_Product = m_Resource.getProduct();
-		m_Product.set_ValueNoCheck("AD_Client_ID", m_Client.getAD_Client_ID());
+		m_Product.set_ValueNoCheck(MCMProduct.COLUMNNAME_JP_CM_Product_ID, cm_Product.getJP_CM_Product_ID());
 		m_Product.saveEx(trxName);
 		
 		if(!Util.isEmpty(cm_Product.getBPartnerValue()))
-			createMProductPO(ctx, m_Client, cm_Product, m_Product, trxName);
+		{
+			try {
+				createMProductPO(cloneCtx, m_Client, cm_Product, m_Product, trxName);
+			}catch (Exception e) {
+				;//Nothing to do
+			}
+		}
 		
 		return m_Product;
 	}
@@ -590,7 +604,10 @@ public class MCMProduct extends X_JP_CM_Product {
 			return null;
 		
 		String msg = null;
-		MExpenseType m_ExpenseType = new MExpenseType(ctx, 0, trxName);
+		Properties cloneCtx = (Properties)ctx.clone();
+		cloneCtx.setProperty("#AD_Client_ID", String.valueOf(m_Client.getAD_Client_ID()));
+		
+		MExpenseType m_ExpenseType = new MExpenseType(cloneCtx, 0, trxName);
 		PO.copyValues(cm_Product, m_ExpenseType);
 		m_ExpenseType.set_ValueNoCheck("AD_Client_ID", m_Client.getAD_Client_ID());
 		m_ExpenseType.setAD_Org_ID(0);
@@ -624,15 +641,14 @@ public class MCMProduct extends X_JP_CM_Product {
 		}
 		
 		m_ExpenseType.saveEx(trxName);
-		
 		MProduct m_Product = m_ExpenseType.getProduct();
-		m_Product.set_ValueNoCheck("AD_Client_ID", m_Client.getAD_Client_ID());
+		m_Product.set_ValueNoCheck(MCMProduct.COLUMNNAME_JP_CM_Product_ID, cm_Product.getJP_CM_Product_ID());
 		m_Product.saveEx(trxName);
 		
 		if(!Util.isEmpty(cm_Product.getBPartnerValue()))
 		{
 			try {
-				createMProductPO(ctx, m_Client, cm_Product, m_Product, trxName);
+				createMProductPO(cloneCtx, m_Client, cm_Product, m_Product, trxName);
 			}catch (Exception e) {
 				;//Nothing to do
 			}
@@ -675,7 +691,10 @@ public class MCMProduct extends X_JP_CM_Product {
 		m_ProductPO.setOrder_Pack(cm_Product.getOrder_Pack());
 		m_ProductPO.setDeliveryTime_Promised(cm_Product.getDeliveryTime_Promised());
 		m_ProductPO.setCostPerOrder(cm_Product.getCostPerOrder());
-		m_ProductPO.setVendorProductNo(cm_Product.getVendorProductNo());
+		if(Util.isEmpty(cm_Product.getVendorProductNo()))
+			m_ProductPO.setVendorProductNo(cm_Product.getValue());
+		else
+			m_ProductPO.setVendorProductNo(cm_Product.getVendorProductNo());
 		m_ProductPO.setVendorCategory(cm_Product.getVendorCategory());
 		m_ProductPO.setManufacturer(cm_Product.getManufacturer());
 		m_ProductPO.saveEx(trxName);
