@@ -463,7 +463,7 @@ public class JPiereImportConsolidatedProduct extends SvrProcess  implements Impo
 	}//reverseLookupJP_VendorUOM_ID
 	
 	/**
-	 * Create New Product
+	 * Create New Consolidated Product
 	 *
 	 * @param importProduct
 	 * @throws Exception
@@ -528,7 +528,11 @@ public class JPiereImportConsolidatedProduct extends SvrProcess  implements Impo
 		ModelValidationEngine.get().fireImportValidate(this, importProduct, newProduct, ImportValidator.TIMING_BEFORE_IMPORT);
 
 		//Copy
-		PO.copyValues(importProduct, newProduct);		
+		PO.copyValues(importProduct, newProduct);
+		if(!Util.isEmpty(importProduct.getProductCategory_Value()))
+			newProduct.setJP_Product_Category_Value(importProduct.getProductCategory_Value());
+		if(!Util.isEmpty(importProduct.getBPartner_Value()))
+			newProduct.setBPartnerValue(importProduct.getBPartner_Value());
 		newProduct.setIsActive(importProduct.isI_IsActiveJP());
 
 		ModelValidationEngine.get().fireImportValidate(this, importProduct, newProduct, ImportValidator.TIMING_AFTER_IMPORT);
@@ -547,7 +551,7 @@ public class JPiereImportConsolidatedProduct extends SvrProcess  implements Impo
 	
 	/**
 	 *
-	 * Update Product
+	 * Update Consolidated Product
 	 *
 	 * @param importProduct
 	 * @throws Exception
@@ -637,6 +641,9 @@ public class JPiereImportConsolidatedProduct extends SvrProcess  implements Impo
 
 		if(!Util.isEmpty(importProduct.getProductCategory_Value()))
 			updateProduct.setJP_Product_Category_Value(importProduct.getProductCategory_Value());
+		
+		if(!Util.isEmpty(importProduct.getBPartner_Value()))
+			updateProduct.setBPartnerValue(importProduct.getBPartner_Value());
 		
 		if(!importProduct.isI_IsActiveJP())
 			updateProduct.setIsActive(importProduct.isI_IsActiveJP());
