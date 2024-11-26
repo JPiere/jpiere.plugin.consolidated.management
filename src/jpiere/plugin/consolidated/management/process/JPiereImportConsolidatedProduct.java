@@ -23,7 +23,6 @@ import java.util.logging.Level;
 import org.adempiere.model.ImportValidator;
 import org.adempiere.process.ImportProcess;
 import org.compiere.model.MColumn;
-import org.compiere.model.MProductCategory;
 import org.compiere.model.MTable;
 import org.compiere.model.ModelValidationEngine;
 import org.compiere.model.PO;
