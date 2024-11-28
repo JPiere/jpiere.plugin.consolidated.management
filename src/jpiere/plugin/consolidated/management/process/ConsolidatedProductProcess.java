@@ -64,7 +64,7 @@ public class ConsolidatedProductProcess extends SvrProcess {
 		int[] AD_Client_IDs = null;
 		if(Util.isEmpty(p_AD_AllClients_V_IDs))
 		{
-			AD_Client_IDs = PO.getAllIDs(MClient.Table_Name, " AD_Client_ID > 0 ", get_TrxName());
+			AD_Client_IDs = PO.getAllIDs(MClient.Table_Name, " AD_Client_ID > 0 AND IsActive='Y' ", get_TrxName());
 		}else {
 			String[] stringIDs = p_AD_AllClients_V_IDs.split(",");
 			AD_Client_IDs = new int[stringIDs.length];
@@ -83,15 +83,16 @@ public class ConsolidatedProductProcess extends SvrProcess {
 		}else {
 			
 			//Selected from Info Window.
-			JP_CM_Product_IDs = PO.getAllIDs("T_Selection", " AD_Pinstance_ID="+getAD_PInstance_ID(), get_TrxName());
+			JP_CM_Product_IDs = PO.getAllIDs("T_Selection", " AD_Pinstance_ID="+getAD_PInstance_ID()+" AND T_Selection_ID >= 1000000", get_TrxName());
 			
 			//Kicked from Process.
 			if(JP_CM_Product_IDs.length == 0)
 			{
 				if(p_JP_CM_ProductCategory_ID == 0)
-					JP_CM_Product_IDs = PO.getAllIDs(MCMProduct.Table_Name, " AD_Client_ID = 0 ", get_TrxName());
+					JP_CM_Product_IDs = PO.getAllIDs(MCMProduct.Table_Name, " AD_Client_ID = 0 AND JP_CM_Product_ID >= 1000000 AND IsActive='Y' ", get_TrxName());
 				else
-					JP_CM_Product_IDs = PO.getAllIDs(MCMProduct.Table_Name, " AD_Client_ID = 0 AND JP_CM_ProductCategory_ID=" + p_JP_CM_ProductCategory_ID, get_TrxName());
+					JP_CM_Product_IDs = PO.getAllIDs(MCMProduct.Table_Name, " AD_Client_ID = 0 AND JP_CM_ProductCategory_ID=" + p_JP_CM_ProductCategory_ID
+																							+ "　AND JP_CM_Product_ID >= 1000000 AND IsActive='Y' ", get_TrxName());
 			}
 		}
 		
@@ -102,21 +103,34 @@ public class ConsolidatedProductProcess extends SvrProcess {
 		int skip = 0;
 		
 		MCMProduct cm_Product = null;
+		MClient m_Client = null;
+		MProduct m_Product = null;
 		for(int JP_CM_Product_ID : JP_CM_Product_IDs)
 		{
-			cm_Product = new MCMProduct(getCtx(), JP_CM_Product_ID, get_TrxName());		
-			if(MCMProduct.PRODUCTTYPE_Asset.equals(cm_Product.getProductType()))//Not supported Asset
-					continue;
+			if(JP_CM_Product_ID < 1000000) //If the ID is less than 1000000, it is not target.
+				continue;
 			
-			counter++;
-			if(processUI != null)
-				processUI.statusUpdate(counter + " : " + cm_Product.getValue());
+			cm_Product = new MCMProduct(getCtx(), JP_CM_Product_ID, get_TrxName());	
+			if(!cm_Product.isActive())
+				continue;
+			
+			if(MCMProduct.PRODUCTTYPE_Asset.equals(cm_Product.getProductType()))//Not supported Asset
+				continue;
 			
 			for(int AD_Client_ID : AD_Client_IDs)
 			{
+				m_Client = MClient.get(AD_Client_ID);
+				if(m_Client.getAD_Client_ID() == 0)
+					continue;
+				if(!m_Client.isActive())
+					continue;
+				
+				counter++;
+				if(processUI != null)
+					processUI.statusUpdate(counter + " : " + cm_Product.getValue());
+				
 				msg = null;
-				MClient m_Client = MClient.get(AD_Client_ID);
-				MProduct m_Product = MCMProduct.getMProduct(AD_Client_ID, cm_Product.getValue(), get_TrxName());
+				m_Product = MCMProduct.getMProduct(AD_Client_ID, cm_Product.getValue(), get_TrxName());
 				if(m_Product == null)
 				{
 					try 
