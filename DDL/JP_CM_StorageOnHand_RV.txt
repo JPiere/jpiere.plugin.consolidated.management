@@ -1,0 +1,56 @@
+CREATE OR REPLACE VIEW adempiere.JP_CM_StorageOnHand_RV
+ AS
+SELECT
+	0 AS AD_Client_ID
+	,0 AS AD_Org_ID
+	,s.AD_Client_ID AS AD_AllClients_V_ID
+	,c.value AS JP_Client_Value
+	,c.Name AS JP_Client_Name
+	,org.Value AS JP_Org_Value
+	,org.Name AS JP_Org_Name
+	,s.JP_AllProducts_V_ID AS JP_AllProducts_V_ID
+	,p.Value AS JP_Product_Value
+	,p.Name AS JP_Product_Name
+	,uom.X12DE355 AS X12DE355	
+	,uom.UOMSymbol AS UOMSymbol
+	,uom.Name AS JP_UOM_Name
+	,cp.JP_CM_Product_ID AS JP_CM_Product_ID
+	,cp.value AS JP_CM_Product_Value
+	,cp.name AS JP_CM_Product_Name
+	,cp.JP_CM_ProductCategory_ID AS JP_CM_ProductCategory_ID
+	,cpc.Value AS JP_CM_ProductCategory_Value
+	,cpc.Name AS JP_CM_ProductCategory_Name
+	,lv1.JP_CM_ProductCategoryL1_ID AS JP_CM_ProductCategoryL1_ID 
+	,lv1.Value AS JP_CM_PCategory_L1_Value
+	,lv1.Name AS JP_CM_PCategory_L1_Name
+	,lv2.JP_CM_ProductCategoryL2_ID AS JP_CM_ProductCategoryL2_ID
+	,lv2.Value AS JP_CM_PCategory_L2_Value
+	,lv2.Name AS JP_CM_PCategory_L2_Name
+    ,s.DateLastInventory
+    ,asi.Description AS JP_ASI_Description
+    ,loc.Value AS JP_Locator_Value
+    ,wh.value AS JP_Warehouse_Value
+    ,wh.Name AS JP_Warehouse_Name
+    ,lt.Name AS JP_LocatorType_Name
+    ,pwh.Value AS JP_PhysicalWarehouse_Value
+    ,pwh.Name AS JP_PhysicalWarehouse_Name
+    ,s.QtyOnHand AS QtyOnHand
+    ,s.DateMaterialPolicy AS DateMaterialPolicy
+FROM adempiere.JP_CM_StorageOnHand s
+			INNER JOIN adempiere.AD_Client c ON (s.AD_Client_ID = c.AD_Client_ID)
+			INNER JOIN adempiere.AD_Org org ON (s.AD_Org_ID = org.AD_Org_ID)
+			INNER JOIN adempiere.M_Product p ON (s.JP_AllProducts_V_ID = p.M_Product_ID)
+				INNER JOIN adempiere.C_UOM uom ON (p.C_UOM_ID = uom.C_UOM_ID)
+			INNER JOIN adempiere.JP_CM_Product cp ON (s.JP_CM_Product_ID = cp.JP_CM_Product_ID)
+				INNER JOIN adempiere.JP_CM_ProductCategory cpc ON (cp.JP_CM_ProductCategory_ID = cpc.JP_CM_ProductCategory_ID)
+					LEFT OUTER JOIN adempiere.JP_CM_ProductCategoryL1 lv1 ON (cpc.JP_CM_ProductCategoryL1_ID = lv1.JP_CM_ProductCategoryL1_ID)
+					LEFT OUTER JOIN adempiere.JP_CM_ProductCategoryL2 lv2 ON (lv1.JP_CM_ProductCategoryL2_ID = lv2.JP_CM_ProductCategoryL2_ID)
+			LEFT OUTER JOIN adempiere.M_AttributeSetInstance asi ON (s.M_AttributeSetInstance_ID = asi.M_AttributeSetInstance_ID)
+			INNER JOIN adempiere.M_Locator loc ON (s.M_Locator_ID = loc.M_Locator_ID)
+				INNER JOIN adempiere.M_Warehouse wh ON (loc.M_Warehouse_ID = wh.M_Warehouse_ID)
+				LEFT OUTER JOIN adempiere.M_LocatorType lt ON (loc.M_LocatorType_ID = lt.M_LocatorType_ID)
+				LEFT OUTER JOIN adempiere.JP_PhysicalWarehouse pwh ON (loc.JP_PhysicalWarehouse_ID = pwh.JP_PhysicalWarehouse_ID)
+			;
+			
+ALTER TABLE adempiere.JP_CM_StorageOnHand_RV
+    OWNER TO adempiere;

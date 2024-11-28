@@ -1,0 +1,22 @@
+CREATE OR REPLACE VIEW adempiere.JP_CM_StorageOnHand
+ AS
+SELECT
+	s.AD_Client_ID AS AD_Client_ID
+	,s.AD_Org_ID AS AD_Org_ID
+	,COALESCE(p.JP_CM_Product_ID,100) AS JP_CM_Product_ID
+	,s.M_Product_ID AS JP_AllProducts_V_ID
+	,s.IsActive AS IsActive
+    ,s.Created AS Created 
+    ,s.Createdby AS Createdby
+    ,s.Updated AS Updated
+    ,s.Updatedby AS Updatedby
+    ,s.DateLastInventory
+    ,s.M_AttributeSetInstance_ID
+    ,s.M_Locator_ID
+    ,s.QtyOnHand
+    ,s.DateMaterialPolicy
+FROM adempiere.M_StorageOnHand s
+			LEFT OUTER JOIN adempiere.M_Product p ON (s.M_Product_ID = p.M_Product_ID);
+		
+ALTER TABLE adempiere.JP_CM_StorageOnHand
+    OWNER TO adempiere;
