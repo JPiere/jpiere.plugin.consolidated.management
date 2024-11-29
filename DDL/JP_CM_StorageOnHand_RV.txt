@@ -36,6 +36,7 @@ SELECT
     ,pwh.Name AS JP_PhysicalWarehouse_Name
     ,s.QtyOnHand AS QtyOnHand
     ,s.DateMaterialPolicy AS DateMaterialPolicy
+    ,s.IsActive AS IsActive
 FROM adempiere.JP_CM_StorageOnHand s
 			INNER JOIN adempiere.AD_Client c ON (s.AD_Client_ID = c.AD_Client_ID)
 			INNER JOIN adempiere.AD_Org org ON (s.AD_Org_ID = org.AD_Org_ID)

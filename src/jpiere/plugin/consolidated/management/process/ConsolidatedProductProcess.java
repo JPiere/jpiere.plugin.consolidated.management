@@ -131,7 +131,7 @@ public class ConsolidatedProductProcess extends SvrProcess {
 				
 				msg = null;
 				m_Product = MCMProduct.getMProduct(AD_Client_ID, cm_Product.getValue(), get_TrxName());
-				if(m_Product == null)
+				if(m_Product == null)//New
 				{
 					try 
 					{
@@ -172,7 +172,7 @@ public class ConsolidatedProductProcess extends SvrProcess {
 						addLog(msg);
 					}
 					
-				}else {
+				}else { //Update
 				
 					try 
 					{
@@ -184,26 +184,27 @@ public class ConsolidatedProductProcess extends SvrProcess {
 								msg = cm_Product.getValue() + " : " + m_Client.getName() + " : " + Msg.getMsg(getCtx(), "JP_AlreadyRegistered2"); //Already registered
 								addLog(msg);
 							}
-							continue;
-						}
 						
-						m_Product.set_ValueNoCheck(MCMProduct.COLUMNNAME_JP_CM_Product_ID, cm_Product.getJP_CM_Product_ID());
-						m_Product.saveEx(get_TrxName());
-						commitEx();
+						}else {
+						
+							m_Product.set_ValueNoCheck(MCMProduct.COLUMNNAME_JP_CM_Product_ID, cm_Product.getJP_CM_Product_ID());
+							m_Product.saveEx(get_TrxName());
+							commitEx();
+							
+							Update++;
+							if(isSuccessLog)
+							{
+								msg = cm_Product.getValue() + " : " + m_Client.getName() + " : " + Msg.getMsg(getCtx(), "Update");
+								addLog(msg);
+							}
+						}
 						
 					}catch (Exception e) {
 						
 						failure++;
 						msg = cm_Product.getValue() + " : " + m_Client.getName() + " : " + e.toString();
-						addLog(msg);			
-						continue;
-					}
-					
-					Update++;
-					if(isSuccessLog)
-					{
-						msg = cm_Product.getValue() + " : " + m_Client.getName() + " : " + Msg.getMsg(getCtx(), "Update");
 						addLog(msg);
+						
 					}
 				}				
 			}//for AD_Client_IDs			
