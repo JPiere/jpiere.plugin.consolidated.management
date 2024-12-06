@@ -37,6 +37,10 @@ SELECT
     ,s.QtyOnHand AS QtyOnHand
     ,s.DateMaterialPolicy AS DateMaterialPolicy
     ,s.IsActive AS IsActive
+    ,s.Created AS Created 
+    ,s.Createdby AS Createdby
+    ,s.Updated AS Updated
+    ,s.Updatedby AS Updatedby
 FROM adempiere.JP_CM_StorageOnHand s
 			INNER JOIN adempiere.AD_Client c ON (s.AD_Client_ID = c.AD_Client_ID)
 			INNER JOIN adempiere.AD_Org org ON (s.AD_Org_ID = org.AD_Org_ID)

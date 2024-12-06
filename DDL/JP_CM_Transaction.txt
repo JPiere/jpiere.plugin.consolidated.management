@@ -1,0 +1,27 @@
+CREATE OR REPLACE VIEW adempiere.JP_CM_Transaction
+ AS
+SELECT
+	t.AD_Client_ID AS AD_Client_ID
+	,t.AD_Org_ID AS AD_Org_ID
+	,COALESCE(p.JP_CM_Product_ID,100) AS JP_CM_Product_ID
+	,t.M_Product_ID AS JP_AllProducts_V_ID
+	,t.IsActive AS IsActive
+    ,t.Created AS Created 
+    ,t.Createdby AS CreatedBy
+    ,t.Updated AS Updated
+    ,t.Updatedby AS UpdatedBy
+	,t.MovementType AS MovementType
+	,t.M_Locator_ID AS M_Locator_ID
+	,t.MovementDate AS MovementDate
+	,t.MovementQty AS MovementQty
+    ,t.M_InventoryLine_ID AS M_InventoryLine_ID
+    ,t.M_MovementLine_ID AS M_MovementLine_ID
+    ,t.M_InOutLine_ID AS M_InOutLine_ID
+    ,t.M_ProductionLine_ID AS M_ProductionLine_ID 
+    ,t.C_ProjectIssue_ID AS C_ProjectIssue_ID 
+    ,t.M_AttributeSetInstance_ID AS M_AttributeSetInstance_ID
+FROM adempiere.M_transaction t
+			LEFT OUTER JOIN adempiere.M_Product p ON (t.M_Product_ID = p.M_Product_ID);
+		
+ALTER TABLE adempiere.JP_CM_Transaction
+    OWNER TO adempiere;
