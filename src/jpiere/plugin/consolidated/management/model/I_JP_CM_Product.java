@@ -388,6 +388,15 @@ public interface I_JP_CM_Product
 	  */
 	public boolean isExcludeAutoDelivery();
 
+    /** Column name IsIgnore_NMMaster_NotFoundJP */
+    public static final String COLUMNNAME_IsIgnore_NMMaster_NotFoundJP = "IsIgnore_NMMaster_NotFoundJP";
+
+	/** Set Ignore non-mandatory masters if not found	  */
+	public void setIsIgnore_NMMaster_NotFoundJP (boolean IsIgnore_NMMaster_NotFoundJP);
+
+	/** Get Ignore non-mandatory masters if not found	  */
+	public boolean isIgnore_NMMaster_NotFoundJP();
+
     /** Column name IsInvoicePrintDetails */
     public static final String COLUMNNAME_IsInvoicePrintDetails = "IsInvoicePrintDetails";
 
@@ -650,12 +659,12 @@ public interface I_JP_CM_Product
     /** Column name JP_Product_Category_Value */
     public static final String COLUMNNAME_JP_Product_Category_Value = "JP_Product_Category_Value";
 
-	/** Set Product Category(Value).
+	/** Set Product Category(Search Key).
 	  * Category of a Product
 	  */
 	public void setJP_Product_Category_Value (String JP_Product_Category_Value);
 
-	/** Get Product Category(Value).
+	/** Get Product Category(Search Key).
 	  * Category of a Product
 	  */
 	public String getJP_Product_Category_Value();
@@ -663,10 +672,10 @@ public interface I_JP_CM_Product
     /** Column name JP_ResourceType_Value */
     public static final String COLUMNNAME_JP_ResourceType_Value = "JP_ResourceType_Value";
 
-	/** Set Resource Type(Value)	  */
+	/** Set Resource Type(Search Key)	  */
 	public void setJP_ResourceType_Value (String JP_ResourceType_Value);
 
-	/** Get Resource Type(Value)	  */
+	/** Get Resource Type(Search Key)	  */
 	public String getJP_ResourceType_Value();
 
     /** Column name JP_RevenueRecognition_Name */

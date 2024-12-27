@@ -35,7 +35,7 @@ public class X_JP_CM_Product extends PO implements I_JP_CM_Product, I_Persistent
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20241124L;
+	private static final long serialVersionUID = 20241227L;
 
     /** Standard Constructor */
     public X_JP_CM_Product (Properties ctx, int JP_CM_Product_ID, String trxName)
@@ -55,6 +55,8 @@ public class X_JP_CM_Product extends PO implements I_JP_CM_Product, I_Persistent
 // N
 			setIsExcludeAutoDelivery (false);
 // N
+			setIsIgnore_NMMaster_NotFoundJP (true);
+// Y
 			setIsInvoicePrintDetails (false);
 // N
 			setIsKanban (false);
@@ -111,6 +113,8 @@ public class X_JP_CM_Product extends PO implements I_JP_CM_Product, I_Persistent
 // N
 			setIsExcludeAutoDelivery (false);
 // N
+			setIsIgnore_NMMaster_NotFoundJP (true);
+// Y
 			setIsInvoicePrintDetails (false);
 // N
 			setIsKanban (false);
@@ -167,6 +171,8 @@ public class X_JP_CM_Product extends PO implements I_JP_CM_Product, I_Persistent
 // N
 			setIsExcludeAutoDelivery (false);
 // N
+			setIsIgnore_NMMaster_NotFoundJP (true);
+// Y
 			setIsInvoicePrintDetails (false);
 // N
 			setIsKanban (false);
@@ -223,6 +229,8 @@ public class X_JP_CM_Product extends PO implements I_JP_CM_Product, I_Persistent
 // N
 			setIsExcludeAutoDelivery (false);
 // N
+			setIsIgnore_NMMaster_NotFoundJP (true);
+// Y
 			setIsInvoicePrintDetails (false);
 // N
 			setIsKanban (false);
@@ -733,6 +741,28 @@ public class X_JP_CM_Product extends PO implements I_JP_CM_Product, I_Persistent
 		return false;
 	}
 
+	/** Set Ignore non-mandatory masters if not found.
+		@param IsIgnore_NMMaster_NotFoundJP Ignore non-mandatory masters if not found
+	*/
+	public void setIsIgnore_NMMaster_NotFoundJP (boolean IsIgnore_NMMaster_NotFoundJP)
+	{
+		set_Value (COLUMNNAME_IsIgnore_NMMaster_NotFoundJP, Boolean.valueOf(IsIgnore_NMMaster_NotFoundJP));
+	}
+
+	/** Get Ignore non-mandatory masters if not found.
+		@return Ignore non-mandatory masters if not found	  */
+	public boolean isIgnore_NMMaster_NotFoundJP()
+	{
+		Object oo = get_Value(COLUMNNAME_IsIgnore_NMMaster_NotFoundJP);
+		if (oo != null)
+		{
+			 if (oo instanceof Boolean)
+				 return ((Boolean)oo).booleanValue();
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
 	/** Set Print detail records on invoice.
 		@param IsInvoicePrintDetails Print detail BOM elements on the invoice
 	*/
@@ -1174,7 +1204,7 @@ public class X_JP_CM_Product extends PO implements I_JP_CM_Product, I_Persistent
 		return (String)get_Value(COLUMNNAME_JP_PartType_Name);
 	}
 
-	/** Set Product Category(Value).
+	/** Set Product Category(Search Key).
 		@param JP_Product_Category_Value Category of a Product
 	*/
 	public void setJP_Product_Category_Value (String JP_Product_Category_Value)
@@ -1182,7 +1212,7 @@ public class X_JP_CM_Product extends PO implements I_JP_CM_Product, I_Persistent
 		set_Value (COLUMNNAME_JP_Product_Category_Value, JP_Product_Category_Value);
 	}
 
-	/** Get Product Category(Value).
+	/** Get Product Category(Search Key).
 		@return Category of a Product
 	  */
 	public String getJP_Product_Category_Value()
@@ -1190,16 +1220,16 @@ public class X_JP_CM_Product extends PO implements I_JP_CM_Product, I_Persistent
 		return (String)get_Value(COLUMNNAME_JP_Product_Category_Value);
 	}
 
-	/** Set Resource Type(Value).
-		@param JP_ResourceType_Value Resource Type(Value)
+	/** Set Resource Type(Search Key).
+		@param JP_ResourceType_Value Resource Type(Search Key)
 	*/
 	public void setJP_ResourceType_Value (String JP_ResourceType_Value)
 	{
 		set_Value (COLUMNNAME_JP_ResourceType_Value, JP_ResourceType_Value);
 	}
 
-	/** Get Resource Type(Value).
-		@return Resource Type(Value)	  */
+	/** Get Resource Type(Search Key).
+		@return Resource Type(Search Key)	  */
 	public String getJP_ResourceType_Value()
 	{
 		return (String)get_Value(COLUMNNAME_JP_ResourceType_Value);

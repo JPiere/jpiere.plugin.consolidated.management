@@ -365,8 +365,11 @@ public class MCMProduct extends X_JP_CM_Product {
 		if(m_Client == null || cm_Product == null)
 			return null;
 		
+		Properties cloneCtx = (Properties)ctx.clone();
+		cloneCtx.setProperty("#AD_Client_ID", String.valueOf(m_Client.getAD_Client_ID()));
+		
 		String msg = null;
-		MProduct m_Product = new MProduct(ctx, 0, trxName);
+		MProduct m_Product = new MProduct(cloneCtx, 0, trxName);
 		PO.copyValues(cm_Product, m_Product);
 		m_Product.set_ValueNoCheck("AD_Client_ID", m_Client.getAD_Client_ID());
 		m_Product.setAD_Org_ID(0);
@@ -410,11 +413,13 @@ public class MCMProduct extends X_JP_CM_Product {
 			MRevenueRecognition m_RevenueRecognition = getMRevenueRecognition(m_Client.getAD_Client_ID(), cm_Product.getJP_RevenueRecognition_Name(), trxName);
 			if(m_RevenueRecognition == null)
 			{
-//				msg = Msg.getMsg(ctx, "invalid")
-//							+ " : " + Msg.getElement(ctx, COLUMNNAME_JP_RevenueRecognition_Name)
-//							+ " = " + cm_Product.getJP_RevenueRecognition_Name();
-//				throw new Exception(msg);
-				
+				if(!cm_Product.isIgnore_NMMaster_NotFoundJP())
+				{
+					msg = Msg.getMsg(ctx, "invalid")
+								+ " : " + Msg.getElement(ctx, COLUMNNAME_JP_RevenueRecognition_Name)
+								+ " = " + cm_Product.getJP_RevenueRecognition_Name();
+					throw new Exception(msg);
+				}
 			}else {
 				m_Product.setC_RevenueRecognition_ID(m_RevenueRecognition.getC_RevenueRecognition_ID());
 			}
@@ -427,11 +432,13 @@ public class MCMProduct extends X_JP_CM_Product {
 			MMailText m_MailText = getMMailText(m_Client.getAD_Client_ID(), cm_Product.getJP_MailText_Name(), trxName);
 			if(m_MailText == null)
 			{
-//				msg =  Msg.getMsg(ctx, "invalid")
-//							+ " : " + Msg.getElement(ctx, COLUMNNAME_JP_MailText_Name)
-//							+ " = " + cm_Product.getJP_MailText_Name();
-//				throw new Exception(msg);
-				
+				if(!cm_Product.isIgnore_NMMaster_NotFoundJP())
+				{
+					msg =  Msg.getMsg(ctx, "invalid")
+								+ " : " + Msg.getElement(ctx, COLUMNNAME_JP_MailText_Name)
+								+ " = " + cm_Product.getJP_MailText_Name();
+					throw new Exception(msg);
+				}
 			}else {
 				m_Product.setR_MailText_ID(m_MailText.getR_MailText_ID());
 			}
@@ -446,11 +453,13 @@ public class MCMProduct extends X_JP_CM_Product {
 			MFreightCategory m_FreightCategory = getMFreightCategory(m_Client.getAD_Client_ID(), cm_Product.getJP_FreightCategory_Value(), trxName);
 			if(m_FreightCategory == null)
 			{
-//				msg = Msg.getMsg(ctx, "invalid")
-//							+ " : " + Msg.getElement(ctx, COLUMNNAME_JP_FreightCategory_Value)
-//							+ " = " + cm_Product.getJP_FreightCategory_Value();
-//				throw new Exception(msg);
-				
+				if(!cm_Product.isIgnore_NMMaster_NotFoundJP())
+				{
+					msg = Msg.getMsg(ctx, "invalid")
+								+ " : " + Msg.getElement(ctx, COLUMNNAME_JP_FreightCategory_Value)
+								+ " = " + cm_Product.getJP_FreightCategory_Value();
+					throw new Exception(msg);
+				}
 			}else {
 				m_Product.setM_FreightCategory_ID(m_FreightCategory.getM_FreightCategory_ID());
 			}
@@ -466,11 +475,13 @@ public class MCMProduct extends X_JP_CM_Product {
 			X_M_PartType m_PartType = getMPartType(m_Client.getAD_Client_ID(), cm_Product.getJP_PartType_Name(), trxName);
 			if(m_PartType == null)
 			{
-//				msg = Msg.getMsg(ctx, "invalid")
-//							+ " : " + Msg.getElement(ctx, COLUMNNAME_JP_PartType_Name)
-//							+ " = " + cm_Product.getJP_PartType_Name();
-//				throw new Exception(msg);
-				
+				if(!cm_Product.isIgnore_NMMaster_NotFoundJP())
+				{
+					msg = Msg.getMsg(ctx, "invalid")
+								+ " : " + Msg.getElement(ctx, COLUMNNAME_JP_PartType_Name)
+								+ " = " + cm_Product.getJP_PartType_Name();
+					throw new Exception(msg);
+				}
 			}else {
 				m_Product.setM_PartType_ID(m_PartType.getM_PartType_ID());
 			}
@@ -481,11 +492,13 @@ public class MCMProduct extends X_JP_CM_Product {
 			MLocator m_FreightCategory = getMLocator(m_Client.getAD_Client_ID(), cm_Product.getJP_Locator_Value(), trxName);
 			if(m_FreightCategory == null)
 			{
-//				msg = Msg.getMsg(ctx, "invalid")
-//							+ " : " + Msg.getElement(ctx, COLUMNNAME_JP_Locator_Value)
-//							+ " = " + cm_Product.getJP_Locator_Value();
-//				throw new Exception(msg);
-				
+				if(!cm_Product.isIgnore_NMMaster_NotFoundJP())
+				{
+					msg = Msg.getMsg(ctx, "invalid")
+								+ " : " + Msg.getElement(ctx, COLUMNNAME_JP_Locator_Value)
+								+ " = " + cm_Product.getJP_Locator_Value();
+					throw new Exception(msg);
+				}
 			}else {
 				m_Product.setM_Locator_ID(m_FreightCategory.getM_Locator_ID());
 			}
@@ -513,11 +526,13 @@ public class MCMProduct extends X_JP_CM_Product {
 			MAttributeSet m_AttributeSet = getMAttributeSet(m_Client.getAD_Client_ID(), cm_Product.getJP_AttributeSet_Name(), trxName);
 			if(m_AttributeSet == null)
 			{
-//				msg =  Msg.getMsg(ctx, "invalid")
-//							+ " : " + Msg.getElement(ctx, COLUMNNAME_JP_AttributeSet_Name)
-//							+ " = " + cm_Product.getJP_AttributeSet_Name();
-//				throw new Exception(msg);
-				
+				if(!cm_Product.isIgnore_NMMaster_NotFoundJP())
+				{
+					msg =  Msg.getMsg(ctx, "invalid")
+								+ " : " + Msg.getElement(ctx, COLUMNNAME_JP_AttributeSet_Name)
+								+ " = " + cm_Product.getJP_AttributeSet_Name();
+					throw new Exception(msg);
+				}
 			}else {
 				m_Product.setM_AttributeSet_ID(m_AttributeSet.getM_AttributeSet_ID());
 			}
@@ -532,7 +547,7 @@ public class MCMProduct extends X_JP_CM_Product {
 		if(!Util.isEmpty(cm_Product.getBPartnerValue()))
 		{
 			try {
-				createMProductPO(ctx, m_Client, cm_Product, m_Product, trxName);
+				createMProductPO(cloneCtx, m_Client, cm_Product, m_Product, trxName);
 			}catch (Exception e) {
 				;// Nothing to do.
 			}
