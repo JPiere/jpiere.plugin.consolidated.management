@@ -1,0 +1,120 @@
+CREATE OR REPLACE VIEW adempiere.JP_AllBPartners_V
+ AS
+SELECT
+	0 AS AD_Client_ID
+	,0 AS AD_Org_ID
+	,bp.AD_Client_ID AS AD_AllClients_V_ID
+	,org.Name AS JP_Org_Name
+	,bp.C_BPartner_ID AS JP_AllBPartners_V_ID
+	,bp.C_BPartner_UU AS JP_AllBPartners_V_UU
+	,bp.IsActive AS IsActive
+    ,bp.Created AS Created 
+    ,bp.Createdby AS Createdby
+    ,bp.Updated AS Updated
+    ,bp.Updatedby AS Updatedby
+    ,bp.JP_CM_BPartner_ID AS JP_CM_BPartner_ID
+    
+    ,bp.Value AS Value
+    ,bp.Name AS Name
+    ,bp.Name2 AS Name2
+    ,bp.Description AS Description
+    ,bp.IsCustomer AS IsCustomer
+	,bp.IsVendor AS IsVendor
+	,bp.IsEmployee AS IsEmployee
+	,bp.IsProspect AS IsProspect
+	,bp.IsSalesRep AS IsSalesRep
+	,bpg.value AS JP_BP_Group_Value
+	,bpg.Name AS JP_BP_Group_Name
+	,bpg.value || '_' || bpg.Name AS JP_BP_Group_VN
+	,corp.Name AS JP_Corporation_Name
+	,bp.ReferenceNo AS ReferenceNo
+	,bp.Rating AS Rating
+	,srep.Name AS JP_SalesRep_Name
+	,srep.EMail AS JP_SalesRep_EMail
+	,bp.SOCreditStatus AS SOCreditStatus
+	,bp.SO_CreditLimit AS SO_CreditLimit
+	,bp.TotalOpenBalance AS TotalOpenBalance
+	,bp.TaxID AS TaxID
+	,bp.IsTaxExempt AS IsTaxExempt
+	,bp.IsPOTaxExempt AS IsPOTaxExempt
+	,bp.URL AS URL
+	,bp.JP_SOTaxRounding AS JP_SOTaxRounding
+	,bp.JP_POTaxRounding AS JP_POTaxRounding
+	,bp.IsSummary AS IsSummary
+	
+	,bp.InvoiceRule AS InvoiceRule
+	,invs.Name AS JP_InvoiceSchedule_Name
+	,bp.PaymentRule AS PaymentRule
+	,pay.Value AS JP_PaymentTerm_Value
+	,pay.Name AS JP_PaymentTerm_Name
+	,pay.value || '_' || pay.Name AS JP_PaymentTerm_VN
+	,bill.Value AS JP_BillSchema_Value
+	,bill.Name AS JP_BillSchema_Name
+	,bill.value || '_' || bill.Name AS JP_BillSchema_VN
+	,bp.DeliveryRule AS DeliveryRule
+	,bp.DeliveryViaRule AS DeliveryViaRule
+	,pl.Name AS JP_PriceList_Name
+	,ds.Name AS JP_DiscountSchema_Name
+	,bp.FlatDiscount AS FlatDiscount
+	,dun.Name AS JP_Dunning_Name
+	,bp.DunningGrace AS DunningGrace
+	,bp.ShelfLifeMinPct AS ShelfLifeMinPct
+	
+	,bp.PaymentRulePO AS PaymentRulePO
+	,ppay.Value AS JP_PO_PaymentTerm_Value
+	,ppay.Name AS JP_PO_PaymentTerm_Name
+	,ppay.value || '_' || ppay.Name AS JP_PO_PaymentTerm_VN
+	,pbill.Value AS JP_BillSchemaPO_Value
+	,pbill.Name AS JP_BillSchemaPO_Name
+	,pbill.value || '_' || pbill.Name AS JP_BillSchemaPO_VN
+	,ppl.Name AS JP_PO_PriceList_Name
+	,pds.Name AS JP_PO_DiscountSchema_Name
+	,bp.Is1099Vendor AS Is1099Vendor
+	,box.Value AS JP_1099Box_Value
+	,box.Name AS JP_1099Box_Name
+	,box.value || '_' || box.Name AS JP_1099Box_VN
+	,bp.IsManufacturer AS IsManufacturer
+	,bp.IsQualifiedInvoiceIssuerJP AS IsQualifiedInvoiceIssuerJP
+	,bp.JP_RegisteredNumberOfQII AS JP_RegisteredNumberOfQII
+	,bp.JP_RegisteredDateOfQII AS JP_RegisteredDateOfQII
+	
+	,bp.POReference AS POReference
+	,bp.AD_Language AS AD_Language
+	,gree.Name AS JP_Greeting_Name
+	,bp.SO_Description AS SO_Description
+	,ipf.Name AS JP_Invoice_PrintFormat_Name
+	,bp.DocumentCopies AS DocumentCopies
+	,bp.IsDiscountPrinted AS IsDiscountPrinted
+	,bpf.Name AS JP_Bill_PrintFormat_Name
+	
+	,bp.ShareOfCustomer AS ShareOfCustomer
+	,bp.DUNS AS DUNS
+	,bp.NAICS AS NAICS
+	,bp.AcqusitionCost AS AcqusitionCost
+	,bp.NumberEmployees AS NumberEmployees
+	,bp.SalesVolume AS SalesVolume
+	,bp.PotentialLifeTimeValue AS PotentialLifeTimeValue
+	,bp.ActualLifeTimeValue AS ActualLifeTimeValue
+	,bp.FirstSale AS FirstSale
+FROM adempiere.C_BPartner bp
+		INNER JOIN adempiere.AD_Org org ON (bp.AD_Org_ID=org.AD_Org_ID)
+		INNER JOIN adempiere.C_BP_Group bpg ON (bp.C_BP_Group_ID=bpg.C_BP_Group_ID)
+		LEFT OUTER JOIN adempiere.JP_Corporation corp ON (bp.JP_Corporation_ID=corp.JP_Corporation_ID)
+		LEFT OUTER JOIN adempiere.AD_User srep ON(bp.SalesRep_ID=srep.AD_User_ID)
+		LEFT OUTER JOIN adempiere.C_InvoiceSchedule invs ON(bp.C_InvoiceSchedule_ID=invs.C_InvoiceSchedule_ID)
+		LEFT OUTER JOIN adempiere.C_PaymentTerm pay ON(bp.C_PaymentTerm_ID=pay.C_PaymentTerm_ID)
+		LEFT OUTER JOIN adempiere.JP_BillSchema bill ON(bp.JP_BillSchema_ID = bill.JP_BillSchema_ID)
+		LEFT OUTER JOIN adempiere.M_PriceList pl ON(bp.M_PriceList_ID = pl.M_PriceList_ID)
+		LEFT OUTER JOIN adempiere.M_DiscountSchema ds ON (bp.M_DiscountSchema_ID = ds.M_DiscountSchema_ID)
+		LEFT OUTER JOIN adempiere.C_Dunning dun ON (bp.C_Dunning_ID = dun.C_Dunning_ID)
+		LEFT OUTER JOIN adempiere.C_PaymentTerm ppay ON(bp.PO_PaymentTerm_ID=ppay.C_PaymentTerm_ID)
+		LEFT OUTER JOIN adempiere.JP_BillSchema pbill ON(bp.JP_BillSchemaPO_ID = pbill.JP_BillSchema_ID)
+		LEFT OUTER JOIN adempiere.M_PriceList ppl ON(bp.PO_PriceList_ID = ppl.M_PriceList_ID)
+		LEFT OUTER JOIN adempiere.M_DiscountSchema pds ON (bp.PO_DiscountSchema_ID = pds.M_DiscountSchema_ID)
+		LEFT OUTER JOIN adempiere.C_1099Box box ON (bp.Default1099Box_ID = box.C_1099Box_ID)
+		LEFT OUTER JOIN adempiere.C_Greeting gree ON (bp.C_Greeting_ID = gree.C_Greeting_ID)
+		LEFT OUTER JOIN adempiere.AD_PrintFormat ipf ON(bp.Invoice_PrintFormat_ID = ipf.AD_PrintFormat_ID)
+		LEFT OUTER JOIN adempiere.AD_PrintFormat bpf ON(bp.JP_Bill_PrintFormat_ID = bpf.AD_PrintFormat_ID)
+		;
+ALTER TABLE adempiere.JP_AllBPartners_V
+    OWNER TO adempiere;
