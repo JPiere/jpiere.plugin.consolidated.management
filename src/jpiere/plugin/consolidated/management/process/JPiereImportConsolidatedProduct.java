@@ -140,7 +140,7 @@ public class JPiereImportConsolidatedProduct extends SvrProcess  implements Impo
 		String msg = Msg.getMsg(getCtx(), "Register") +" & "+ Msg.getMsg(getCtx(), "Update")  + " " + Msg.getElement(getCtx(), "M_Product_ID");
 		if (processUI != null)	processUI.statusUpdate(msg);
 		
-		sql = new StringBuilder ("SELECT * FROM I_ProductJP WHERE I_IsImported='N' OR Processed='N' ")
+		sql = new StringBuilder ("SELECT * FROM I_ProductJP WHERE (I_IsImported='N' OR Processed='N') ")
 				.append(clientCheck).append(" ORDER BY Value ");
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
