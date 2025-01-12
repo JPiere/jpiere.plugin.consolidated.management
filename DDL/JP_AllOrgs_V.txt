@@ -1,0 +1,21 @@
+CREATE OR REPLACE VIEW adempiere.JP_AllOrgs_V
+ AS
+SELECT
+	0 AS AD_Client_ID
+	,0 AS AD_Org_ID
+	,o.AD_Client_ID AS AD_AllClients_V_ID
+	,o.AD_Org_ID AS JP_AllOrgs_V_ID
+	,o.AD_Org_UU AS JP_AllOrgs_V_UU
+	,o.IsActive AS IsActive
+    ,o.Created AS Created 
+    ,o.Createdby AS Createdby
+    ,o.Updated AS Updated
+    ,o.Updatedby AS Updatedby
+    ,o.Value AS Value
+    ,o.Name AS Name
+    ,o.Description AS Description
+	,o.IsSummary AS IsSummary
+FROM adempiere.AD_Org o
+;
+ALTER TABLE adempiere.JP_AllOrgs_V
+    OWNER TO adempiere;
