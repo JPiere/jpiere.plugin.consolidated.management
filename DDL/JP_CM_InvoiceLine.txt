@@ -1,0 +1,73 @@
+CREATE OR REPLACE VIEW adempiere.JP_CM_InvoiceLine
+ AS
+SELECT
+	il.C_InvoiceLine_ID AS JP_CM_InvoiceLine_ID
+	,il.C_InvoiceLine_ID AS C_InvoiceLine_ID
+	,il.C_InvoiceLine_UU AS JP_CM_InvoiceLine_UU
+	,il.C_InvoiceLine_UU AS C_InvoiceLine_UU
+	,0 AS AD_Client_ID
+	,il.AD_Client_ID AS AD_AllClients_V_ID
+	,0 AS AD_Org_ID
+	,il.AD_Org_ID AS JP_AllOrgs_V_ID
+	,il.IsActive AS IsActive
+    ,il.Created AS Created 
+    ,il.Createdby AS Createdby
+    ,il.Updated AS Updated
+    ,il.Updatedby AS Updatedby	
+	,il.C_Invoice_ID AS JP_CM_Invoice_ID
+	,il.C_Invoice_ID AS C_Invoice_ID
+	
+	,il.AD_OrgTrx_ID AS AD_OrgTrx_ID
+	,il.A_Asset_Group_ID AS A_Asset_Group_ID
+	,il.A_Asset_ID AS A_Asset_ID
+	,il.A_CapvsExp AS A_CapvsExp
+	,il.A_CreateAsset AS A_CreateAsset
+	,il.A_Processed AS A_Processed
+	,il.C_1099Box_ID AS C_1099Box_ID
+	,il.C_Activity_ID AS C_Activity_ID
+	,il.C_Campaign_ID AS C_Campaign_ID
+	,il.C_Charge_ID AS C_Charge_ID
+	,il.C_OrderLine_ID AS C_OrderLine_ID
+	,il.C_ProjectPhase_ID AS C_ProjectPhase_ID
+	,il.C_ProjectTask_ID AS C_ProjectTask_ID
+	,il.C_Project_ID AS C_Project_ID
+	,il.C_Tax_ID AS C_Tax_ID
+	,il.C_UOM_ID AS C_UOM_ID
+	,il.Description AS Description
+	,il.IsDescription AS IsDescription
+	,il.IsFixedAssetInvoice AS IsFixedAssetInvoice
+	,il.IsPrinted AS IsPrinted
+	,il.JP_CommunicationColumn AS JP_CommunicationColumn
+	,il.JP_ContractLine_ID AS JP_ContractLine_ID
+	,il.JP_ContractProcPeriod_ID AS JP_ContractProcPeriod_ID
+	,il.JP_ProductExplodeBOM_ID AS JP_ProductExplodeBOM_ID
+	,il.JP_RecognitionLine_ID AS JP_RecognitionLine_ID
+	,il.JP_TaxAmt AS JP_TaxAmt
+	,il.JP_TaxBaseAmt AS JP_TaxBaseAmt
+	,il.Line AS Line
+	,il.LineNetAmt AS LineNetAmt
+	,il.LineTotalAmt AS LineTotalAmt
+	,il.M_AttributeSetInstance_ID AS M_AttributeSetInstance_ID
+	,il.M_InOutLine_ID AS M_InOutLine_ID
+	,il.M_Product_ID AS JP_AllProducts_V_ID
+	,COALESCE(p.JP_CM_Product_ID,100) AS JP_CM_Product_ID
+	,il.M_RMALine_ID AS M_RMALine_ID
+	,il.PriceActual AS PriceActual
+	,il.PriceEntered AS PriceEntered
+	,il.PriceLimit AS PriceLimit
+	,il.PriceList AS PriceList
+	,il.Processed AS Processed
+	,il.QtyEntered AS QtyEntered
+	,il.QtyInvoiced AS QtyInvoiced
+	,il.RRAmt AS RRAmt
+	,il.RRStartDate AS RRStartDate
+	,il.Ref_InvoiceLine_ID AS Ref_InvoiceLine_ID
+	,il.S_ResourceAssignment_ID AS S_ResourceAssignment_ID
+	,il.TaxAmt AS TaxAmt
+	,il.User1_ID
+	,il.User2_ID    
+FROM adempiere.C_InvoiceLine il
+		LEFT OUTER JOIN adempiere.M_Product p ON (il.M_Product_ID = p.M_Product_ID);
+		
+ALTER TABLE adempiere.JP_CM_InvoiceLine
+    OWNER TO adempiere;

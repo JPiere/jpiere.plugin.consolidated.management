@@ -1,0 +1,85 @@
+CREATE OR REPLACE VIEW adempiere.JP_CM_Invoice
+AS
+SELECT
+	i.C_Invoice_ID AS JP_CM_Invoice_ID
+	,i.C_Invoice_ID AS C_Invoice_ID
+	,i.C_Invoice_UU AS JP_CM_Invoice_UU
+	,i.C_Invoice_UU AS C_Invoice_UU
+	,0 AS AD_Client_ID
+	,i.AD_Client_ID AS AD_AllClients_V_ID
+	,0 AS AD_Org_ID
+	,i.AD_Org_ID AS JP_AllOrgs_V_ID
+	,i.IsActive AS IsActive
+    ,i.Created AS Created 
+    ,i.Createdby AS Createdby
+    ,i.Updated AS Updated
+    ,i.Updatedby AS Updatedby	
+	
+	,i.AD_OrgTrx_ID AS AD_OrgTrx_ID
+	,i.AD_User_ID AS AD_User_ID
+    ,i.C_Activity_ID AS C_Activity_ID  
+    ,i.C_BPartner_ID AS JP_AllBPartner_V_ID  		
+	,COALESCE(bp.JP_CM_BPartner_ID,100) AS JP_CM_BPartner_ID
+	,i.C_BPartner_Location_ID AS C_BPartner_Location_ID
+    ,i.C_Campaign_ID AS C_Campaign_ID
+    ,i.C_ConversionType_ID AS C_ConversionType_ID
+    ,i.C_Currency_ID AS C_Currency_ID
+    ,i.C_DocTypeTarget_ID AS C_DocTypeTarget_ID
+    ,i.C_DocType_ID AS C_DocType_ID
+    ,i.C_Order_ID AS C_Order_ID
+    ,i.C_PaymentTerm_ID AS C_PaymentTerm_ID
+    ,i.C_Project_ID AS C_Project_ID
+    ,i.ChargeAmt AS ChargeAmt
+    ,i.CurrencyRate AS CurrencyRate
+    ,i.DateAcct AS DateAcct
+    ,i.DateInvoiced AS DateInvoiced
+    ,i.DateOrdered AS DateOrdered
+    ,i.DatePrinted AS DatePrinted
+ 	,i.Description AS Description
+ 	,i.DocAction AS DocAction
+ 	,dt.DocBaseType AS DocBaseType
+    ,i.DocStatus AS DocStatus	
+    ,i.DocumentNo AS DocumentNo
+    ,i.DunningGrace AS DunningGrace
+    ,i.GrandTotal AS GrandTotal
+    ,i.InvoiceCollectionType AS InvoiceCollectionType    
+	,i.IsApproved AS IsApproved
+	,i.IsDiscountPrinted AS IsDiscountPrinted
+	,i.IsFixedAssetInvoice AS IsFixedAssetInvoice
+	,i.IsInDispute AS IsInDispute
+	,i.IsOverrideCurrencyRate AS IsOverrideCurrencyRate
+    ,i.IsPaid AS IsPaid
+ 	,i.IsPayScheduleValid AS IsPayScheduleValid	
+ 	,i.IsPrinted AS IsPrinted
+    ,i.IsSOTrx AS IsSOTrx
+    ,i.IsSelfService AS IsSelfService
+    ,i.IsTaxIncluded AS IsTaxIncluded
+    ,i.JP_Bill_ID AS JP_Bill_ID
+	,i.JP_BP_BankAccount_ID AS JP_BP_BankAccount_ID
+    ,i.JP_CommunicationColumn AS JP_CommunicationColumn
+ 	,i.JP_Contract_ID AS JP_Contract_ID
+	,i.JP_ContractContent_ID AS JP_ContractContent_ID
+	,i.JP_ContractProcPeriod_ID AS JP_ContractProcPeriod_ID
+	,i.JP_Recognition_ID AS JP_Recognition_ID
+    ,i.JP_Remarks AS JP_Remarks
+	,i.JP_Subject AS JP_Subject
+    ,i.M_PriceList_ID AS M_PriceList_ID
+    ,i.M_RMA_ID AS M_RMA_ID
+	,i.POReference AS POReference
+    ,i.PaymentRule AS PaymentRule   	
+    ,i.Posted AS Posted		
+    ,i.Processed AS Processed 
+	,i.Ref_Invoice_ID AS Ref_Invoice_ID
+	,i.RelatedInvoice_ID AS RelatedInvoice_ID
+	,i.Reversal_ID AS Reversal_ID
+    ,i.SalesRep_ID AS SalesRep_ID
+    ,i.SendEMail AS SendEMail
+ 	,i.TotalLines AS TotalLines   
+	,i.User1_ID AS User1_ID
+	,i.User2_ID AS User2_ID
+FROM adempiere.C_Invoice i
+		INNER JOIN adempiere.C_BPartner bp ON (i.C_BPartner_ID = bp.C_BPartner_ID)
+		INNER JOIN adempiere.C_DocType dt ON (i.C_DocTypeTarget_ID = dt.C_DocType_ID);
+		
+ALTER TABLE adempiere.JP_CM_Invoice
+    OWNER TO adempiere;

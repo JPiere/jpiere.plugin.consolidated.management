@@ -1,0 +1,90 @@
+CREATE OR REPLACE VIEW adempiere.JP_AllInvoiceLines_V
+ AS
+SELECT
+	il.JP_CM_InvoiceLine_ID AS JP_AllInvoiceLines_V_ID
+	,il.C_InvoiceLine_ID AS C_InvoiceLine_ID
+	,il.JP_CM_InvoiceLine_UU AS JP_AllInvoiceLines_V_UU
+	,il.C_InvoiceLine_UU AS C_InvoiceLine_UU
+	,0 AS AD_Client_ID
+	,il.AD_Client_ID AS AD_AllClients_V_ID
+	,0 AS AD_Org_ID
+	,il.JP_AllOrgs_V_ID AS JP_AllOrgs_V_ID
+	,il.IsActive AS IsActive
+    ,il.Created AS Created 
+    ,il.Createdby AS Createdby
+    ,il.Updated AS Updated
+    ,il.Updatedby AS Updatedby	
+	,il.JP_CM_Invoice_ID AS JP_AllInvoices_V_ID
+	,il.C_Invoice_ID AS C_Invoice_ID
+	
+	,otx.Name AS JP_OrgTrx_Name
+	,ag.Name AS JP_Asset_Group_Name
+	,aa.Name AS JP_Asset_Name
+	,il.A_CapvsExp AS A_CapvsExp
+	,il.A_CreateAsset AS A_CreateAsset
+	,il.A_Processed AS A_Processed
+	,box.Name AS JP_1099Box_Name
+	,avt.Name AS JP_Activity_Name
+	,cmp.Name AS JP_Campaign_Name
+	,chg.Name AS JP_Charge_Name
+	,ol.Line AS JP_OrderLine_Line
+	,pjp.Name AS JP_ProjectPhase_Name
+	,pjt.Name AS JP_ProjectTask_Name
+	,pj.Name AS JP_Project_Name
+	,tax.Name AS JP_Tax_Name
+	,uom.UOMSymbol AS UOMSymbol
+	,il.Description AS Description
+	,il.IsDescription AS IsDescription
+	,il.IsFixedAssetInvoice AS IsFixedAssetInvoice
+	,il.IsPrinted AS IsPrinted
+	,il.JP_CommunicationColumn AS JP_CommunicationColumn
+	,cl.Line AS JP_ContractLine_Line
+    ,cpp.Name AS JP_ContractProcPeriod_Name	
+	,peb.Name AS JP_ProductExplodeBOM_Name
+	,rl.Line AS JP_RecognitionLine_Line	
+	,il.JP_TaxAmt AS JP_TaxAmt
+	,il.JP_TaxBaseAmt AS JP_TaxBaseAmt
+	,il.Line AS Line
+	,il.LineNetAmt AS LineNetAmt
+	,il.LineTotalAmt AS LineTotalAmt
+	,asi.Description AS JP_ASI_Description
+	,iol.Line AS JP_InOutLine_Line
+	,il.JP_AllProducts_V_ID AS JP_AllProducts_V_ID
+	,il.JP_CM_Product_ID AS JP_CM_Product_ID
+	,rma.Line AS JP_RMALine_Line
+	,il.PriceActual AS PriceActual
+	,il.PriceEntered AS PriceEntered
+	,il.PriceLimit AS PriceLimit
+	,il.PriceList AS PriceList
+	,il.Processed AS Processed
+	,il.QtyEntered AS QtyEntered
+	,il.QtyInvoiced AS QtyInvoiced
+	,il.RRAmt AS RRAmt
+	,il.RRStartDate AS RRStartDate
+	,il.Ref_InvoiceLine_ID AS Ref_InvoiceLine_ID
+	,il.TaxAmt AS TaxAmt
+   
+FROM adempiere.JP_CM_InvoiceLine il
+		LEFT OUTER JOIN adempiere.AD_Org otx ON (il.AD_OrgTrx_ID = otx.AD_Org_ID)
+		LEFT OUTER JOIN adempiere.A_Asset_Group ag ON (il.A_Asset_Group_ID = ag.A_Asset_Group_ID)
+		LEFT OUTER JOIN adempiere.A_Asset aa ON (il.A_Asset_ID = aa.A_Asset_ID)
+		LEFT OUTER JOIN adempiere.C_1099Box box ON (il.C_1099Box_ID = box.C_1099Box_ID)
+		LEFT OUTER JOIN adempiere.C_Activity avt ON (il.C_Activity_ID  = avt.C_Activity_ID)
+		LEFT OUTER JOIN adempiere.C_Campaign cmp ON (il.C_Campaign_ID = cmp.C_Campaign_ID)
+		LEFT OUTER JOIN adempiere.C_Charge chg ON (il.C_Charge_ID = chg.C_Charge_ID)
+		LEFT OUTER JOIN adempiere.C_OrderLine ol ON (il.C_OrderLine_ID = ol.C_OrderLine_ID)
+		LEFT OUTER JOIN adempiere.C_Project pj ON (il.C_Project_ID = pj.C_Project_ID)		
+		LEFT OUTER JOIN adempiere.C_ProjectPhase pjp ON (il.C_ProjectPhase_ID = pjp.C_ProjectPhase_ID)
+		LEFT OUTER JOIN adempiere.C_ProjectTask pjt ON (il.C_ProjectTask_ID = pjt.C_ProjectTask_ID)
+		LEFT OUTER JOIN adempiere.C_Tax tax ON (il.C_Tax_ID = tax.C_Tax_ID)
+		LEFT OUTER JOIN adempiere.C_UOM uom ON (il.C_UOM_ID = uom.C_UOM_ID)
+		LEFT OUTER JOIN adempiere.JP_ContractLine cl ON(il.JP_ContractLine_ID = cl.JP_ContractLine_ID)
+		LEFT OUTER JOIN adempiere.JP_ContractProcPeriod cpp ON (il.JP_ContractProcPeriod_ID = cpp.JP_ContractProcPeriod_ID)
+		LEFT OUTER JOIN adempiere.M_Product peb ON (il.JP_ProductExplodeBOM_ID = peb.M_Product_ID)
+		LEFT OUTER JOIN adempiere.JP_RecognitionLine rl ON (il.JP_RecognitionLine_ID = rl.JP_RecognitionLine_ID)
+		LEFT OUTER JOIN adempiere.M_AttributeSetInstance asi ON (il.M_AttributeSetInstance_ID = asi.M_AttributeSetInstance_ID)
+		LEFT OUTER JOIN adempiere.M_InOutLine iol ON (il.M_InOutLine_ID = iol.M_InOutLine_ID)
+		LEFT OUTER JOIN adempiere.M_RMALine rma ON (il.M_RMALine_ID = rma.M_RMALine_ID)
+		;
+ALTER TABLE adempiere.JP_AllInvoiceLines_V
+    OWNER TO adempiere;
