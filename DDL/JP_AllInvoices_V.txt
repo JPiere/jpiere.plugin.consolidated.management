@@ -3,7 +3,7 @@ AS
 SELECT
 	i.JP_CM_Invoice_ID AS JP_AllInvoices_V_ID
 	,i.C_Invoice_ID AS C_Invoice_ID
-	,i.C_Invoice_UU AS JP_AllInvoices_V_UU
+	,i.JP_CM_Invoice_UU AS JP_AllInvoices_V_UU
 	,i.C_Invoice_UU AS C_Invoice_UU
 	,0 AS AD_Client_ID
 	,i.AD_AllClients_V_ID AS AD_AllClients_V_ID

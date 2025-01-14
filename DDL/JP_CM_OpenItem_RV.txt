@@ -1,0 +1,85 @@
+CREATE OR REPLACE VIEW adempiere.JP_CM_OpenItem_RV
+AS
+SELECT
+	i.C_Invoice_ID AS JP_AllInvoices_V_ID
+	,0 AS AD_Client_ID
+	,i.AD_Client_ID AS AD_AllClients_V_ID
+	,0 AS AD_Org_ID
+	,i.AD_Org_ID AS JP_AllOrgs_V_ID
+	,i.IsActive AS IsActive
+    ,i.Created AS Created 
+    ,i.Createdby AS Createdby
+    ,i.Updated AS Updated
+    ,i.Updatedby AS Updatedby
+    
+    ,dt.Name AS JP_DocType_Name
+    ,i.DocumentNo AS DocumentNo
+    ,i.IsSoTrx AS IsSoTrx 
+    ,i.DateInvoiced AS DateInvoiced 
+    ,i.DateAcct AS DateAcct 
+    ,i.DateOrdered
+    ,i.C_BPartner_ID  AS JP_AllBPartners_V_ID
+    ,bpl.Name AS JP_BPartner_Location_Name
+    ,COALESCE(bp.JP_CM_BPartner_ID,100) AS JP_CM_BPartner_ID
+    ,COALESCE(cp.JP_Corporation_ID,100) AS JP_Corporation_ID
+    ,COALESCE(ct.JP_CM_CorpType_ID,100) AS JP_CM_CorpType_ID          
+    ,i.Netdays AS Netdays
+    ,i.DueDate AS DueDate
+    ,i.DaysDue AS DaysDue
+    ,i.DiscountDate AS DiscountDate
+    ,i.DiscountAmt AS DiscountAmt
+    
+    ,i.totallines
+    ,i.GrandTotal AS GrandTotal
+    ,i.PaidAmt AS PaidAmt
+    ,i.OpenAmt AS OpenAmt
+    ,i.C_Currency_ID
+    ,cvt.Name AS JP_ConversionType_Name
+    ,pt.Name AS JP_PaymentTerm_Name
+    ,i.InvoiceCollectionType
+ 	,cmp.Name AS JP_Campaign_Name   
+    ,pj.Name AS JP_Project_Name
+    ,avt.Name AS JP_Activity_Name
+    ,otx.Name AS JP_OrgTrx_Name
+    
+    ,i.DatePrinted
+    ,i.Description
+    ,i.DocStatus
+    ,i.IsIndispute
+    ,i.IsPaid
+    ,i.IsPrinted
+    ,i.IsTaxIncluded
+    ,i.IsTransferred
+    ,i.PaymentRule
+    ,i.POReference
+    ,i.Posted  
+    ,u.Name AS JP_User_Name
+    ,odr.DocumentNo AS JP_Order_DocumentNo
+	,pl.Name AS JP_PriceList_Name
+	,rma.DocumentNo AS JP_RMA_DocumentNo
+    ,srep.Name AS JP_SalesRep_Name
+    ,i.SendEMail AS SendEMail
+
+    
+FROM adempiere.JP_OpenItem i
+		LEFT OUTER JOIN adempiere.AD_Org otx ON (i.AD_OrgTrx_ID = otx.AD_Org_ID)
+		LEFT OUTER JOIN adempiere.AD_User u ON (i.AD_User_ID = u.AD_User_ID)
+		LEFT OUTER JOIN adempiere.C_Activity avt ON (i.C_Activity_ID  = avt.C_Activity_ID)
+		INNER JOIN adempiere.C_BPartner bp ON (i.C_BPartner_ID = bp.C_BPartner_ID)
+			INNER JOIN adempiere.C_BPartner_Location bpl ON(i.C_BPartner_Location_ID = bpl.C_BPartner_Location_ID)
+			LEFT OUTER JOIN adempiere.JP_CM_BPartner cbp ON (bp.JP_CM_BPartner_ID = cbp.JP_CM_BPartner_ID)
+				LEFT OUTER JOIN adempiere.JP_Corporation cp ON (bp.JP_Corporation_ID = cp.JP_Corporation_ID)
+					LEFT OUTER JOIN adempiere.JP_CM_CorpType ct ON(cp.JP_CM_CorpType_ID = ct.JP_CM_CorpType_ID)
+		LEFT OUTER JOIN adempiere.C_Campaign cmp ON (i.C_Campaign_ID = cmp.C_Campaign_ID)
+		LEFT OUTER JOIN adempiere.C_ConversionType cvt ON (i.C_ConversionType_ID = cvt.C_ConversionType_ID)
+		INNER JOIN adempiere.C_DocType dt ON (i.C_DocTypeTarget_ID = dt.C_DocType_ID)
+		LEFT OUTER JOIN adempiere.C_Order odr ON (i.C_Order_ID = odr.C_Order_ID)
+		INNER JOIN adempiere.C_PaymentTerm pt ON (i.C_PaymentTerm_ID = pt.C_PaymentTerm_ID)
+		LEFT OUTER JOIN adempiere.C_Project pj ON (i.C_Project_ID = pj.C_Project_ID)
+		INNER JOIN adempiere.M_PriceList pl ON (i.M_PriceList_ID = pl.M_PriceList_ID)
+		LEFT OUTER JOIN adempiere.M_RMA rma ON (i.M_RMA_ID = rma.M_RMA_ID)
+		LEFT OUTER JOIN adempiere.AD_User srep ON (i.SalesRep_ID = srep.AD_User_ID)
+;
+		
+ALTER TABLE adempiere.JP_CM_OpenItem_RV
+    OWNER TO adempiere;
