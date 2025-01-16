@@ -18,7 +18,7 @@ SELECT
 	,i.AD_OrgTrx_ID AS AD_OrgTrx_ID
 	,i.AD_User_ID AS AD_User_ID
     ,i.C_Activity_ID AS C_Activity_ID  
-    ,i.C_BPartner_ID AS JP_AllBPartner_V_ID  		
+    ,i.C_BPartner_ID AS JP_AllBPartners_V_ID  		
 	,COALESCE(bp.JP_CM_BPartner_ID,100) AS JP_CM_BPartner_ID
 	,i.C_BPartner_Location_ID AS C_BPartner_Location_ID
     ,i.C_Campaign_ID AS C_Campaign_ID
