@@ -1,0 +1,93 @@
+CREATE OR REPLACE VIEW adempiere.JP_CM_Payment
+AS
+SELECT
+	p.C_Payment_ID AS JP_CM_Payment_ID
+	,p.C_Payment_ID AS C_Payment_ID
+	,p.C_Payment_UU AS JP_CM_Payment_UU
+	,p.C_Payment_UU AS C_Payment_UU
+	,0 AS AD_Client_ID
+	,p.AD_Client_ID AS AD_AllClients_V_ID
+	,0 AS AD_Org_ID
+	,p.AD_Org_ID AS JP_AllOrgs_V_ID
+	,p.IsActive AS IsActive
+    ,p.Created AS Created 
+    ,p.Createdby AS Createdby
+    ,p.Updated AS Updated
+    ,p.Updatedby AS Updatedby	
+	
+	,p.DateAcct AS DateAcct
+	,p.DateTrx AS DateTrx
+	,p.C_BankAccount_ID AS C_BankAccount_ID
+	,p.C_BP_BankAccount_ID AS C_BP_BankAccount_ID
+	,p.C_BankTransfer_ID AS C_BankTransfer_ID
+	,p.AD_OrgTrx_ID AS AD_OrgTrx_ID
+    ,p.C_BPartner_ID AS JP_AllBPartners_V_ID  		
+	,COALESCE(bp.JP_CM_BPartner_ID,100) AS JP_CM_BPartner_ID
+	,p.Description AS Description
+	,p.DocStatus AS DocStatus
+	,p.DocumentNo AS DocumentNo
+	
+	,p.C_Activity_ID AS C_Activity_ID
+	,p.C_Campaign_ID AS C_Campaign_ID
+	,p.C_CashBook_ID AS C_CashBook_ID
+	,p.C_Charge_ID AS C_Charge_ID
+	,p.C_ConversionType_ID AS C_ConversionType_ID
+	,p.C_Currency_ID AS C_Currency_ID
+	,p.C_DepositBatch_ID AS C_DepositBatch_ID
+	,p.C_DocType_ID AS C_DocType_ID
+	,p.C_Invoice_ID AS JP_AllInvoices_V_ID
+	,p.C_Order_ID AS C_Order_ID
+	,p.C_POSTenderType_ID AS C_POSTenderType_ID
+	,p.C_PaymentBatch_ID AS C_PaymentBatch_ID
+	,p.C_PaymentProcessor_ID AS C_PaymentProcessor_ID
+	,p.C_Project_ID AS C_Project_ID
+	,p.ChargeAmt AS ChargeAmt
+	,p.CheckNo AS CheckNo
+	,p.ConvertedAmt AS ConvertedAmt
+	,p.CreditCardExpMM AS CreditCardExpMM
+	,p.CreditCardExpYY AS CreditCardExpYY
+	,p.CreditCardNumber AS CreditCardNumber
+	,p.CreditCardType AS CreditCardType
+	,p.CreditCardVV AS CreditCardVV
+	,p.CurrencyRate AS CurrencyRate
+	,p.CustomerAddressID AS CustomerAddressID
+	,p.CustomerPaymentProfileID AS CustomerPaymentProfileID
+	,p.CustomerProfileID AS CustomerProfileID
+	,p.DiscountAmt AS DiscountAmt
+	,p.IBAN AS IBAN
+	,p.IsAllocated AS IsAllocated
+	,p.IsApproved AS IsApproved
+	,p.IsDelayedCapture AS IsDelayedCapture
+	,p.IsOnline AS IsOnline
+	,p.IsOverUnderPayment AS IsOverUnderPayment
+	,p.IsOverrideCurrencyRate AS IsOverrideCurrencyRate
+	,p.IsPrepayment AS IsPrepayment
+	,p.IsReceipt AS IsReceipt
+	,p.IsReconciled AS IsReconciled
+	,p.IsSelfService AS IsSelfService
+	,p.IsVoided AS IsVoided
+	,p.JP_Bill_ID AS JP_Bill_ID
+	,p.Micr AS Micr
+	,p.OProcessing AS OProcessing
+	,p.Orig_TrxID AS Orig_TrxID
+	,p.OverUnderAmt AS OverUnderAmt
+	,p.PONum AS PONum
+	,p.PayAmt AS PayAmt
+	,p.Posted AS Posted
+	,p.Processed AS Processed
+	,p.Ref_Payment_ID AS Ref_Payment_ID
+	,p.Reversal_ID AS Reversal_ID
+	,p.RoutingNo AS RoutingNo
+	,p.SwiftCode AS SwiftCode
+	,p.Swipe AS Swipe
+	,p.TaxAmt AS TaxAmt
+	,p.TenderType AS TenderType
+	,p.TrxType AS TrxType
+	,p.VoiceAuthCode AS VoiceAuthCode
+	,p.WriteOffAmt AS WriteOffAmt
+
+FROM adempiere.C_Payment p
+		INNER JOIN adempiere.C_BPartner bp ON (p.C_BPartner_ID = bp.C_BPartner_ID)
+;		
+ALTER TABLE adempiere.JP_CM_Payment
+    OWNER TO adempiere;

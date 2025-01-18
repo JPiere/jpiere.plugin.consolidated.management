@@ -1,0 +1,67 @@
+CREATE OR REPLACE VIEW adempiere.JP_AllPayments_V
+AS
+SELECT
+	p.JP_CM_Payment_ID AS JP_AllPayments_V_ID
+	,p.C_Payment_ID AS C_Payment_ID
+	,p.JP_CM_Payment_UU AS JP_AllPayments_V_UU
+	,p.C_Payment_UU AS C_Payment_UU
+	,p.AD_Client_ID AS AD_Client_ID
+	,p.AD_AllClients_V_ID AS AD_AllClients_V_ID
+	,p.AD_Org_ID AS AD_Org_ID
+	,p.JP_AllOrgs_V_ID AS JP_AllOrgs_V_ID
+	,p.IsActive AS IsActive
+    ,p.Created AS Created 
+    ,p.Createdby AS Createdby
+    ,p.Updated AS Updated
+    ,p.Updatedby AS Updatedby	
+	
+	,otx.Name AS JP_OrgTrx_Name
+	,dt.Name AS JP_DocType_Name
+	,p.DocumentNo AS DocumentNo
+	,p.IsReceipt AS IsReceipt
+	,ba.Name AS JP_BankAccount_Name
+	,p.DateAcct AS DateAcct
+	,p.DateTrx AS DateTrx	
+	,p.Description AS Description
+	,p.JP_AllBPartners_V_ID	AS JP_AllBPartners_V_ID
+	,p.JP_CM_BPartner_ID AS JP_CM_BPartner_ID
+	,bill.DocumentNo AS JP_Bill_DocumentNo
+	,p.JP_AllInvoices_V_ID AS JP_AllInvoices_V_ID
+	,o.DocumentNo AS JP_Order_DocumentNo
+	,chg.Name AS JP_Charge_Name
+	,p.IsPrepayment AS IsPrepayment	
+	,p.PayAmt AS PayAmt
+	,p.C_Currency_ID AS C_Currency_ID
+	,cvt.Name AS JP_ConversionType_Name	
+	,p.IsOverrideCurrencyRate AS IsOverrideCurrencyRate
+	,p.ConvertedAmt AS ConvertedAmt
+	,p.CurrencyRate AS CurrencyRate
+	,p.DiscountAmt AS DiscountAmt
+	,p.WriteOffAmt AS WriteOffAmt
+	,p.IsOverUnderPayment AS IsOverUnderPayment
+	,p.OverUnderAmt AS OverUnderAmt	
+	,p.DocStatus AS DocStatus
+	,p.IsAllocated AS IsAllocated
+	,p.IsApproved AS IsApproved
+	,p.IsReconciled AS IsReconciled
+	,p.Posted AS Posted
+	,p.Processed AS Processed
+	,p.RoutingNo AS RoutingNo
+	,p.SwiftCode AS SwiftCode
+	,p.TenderType AS TenderType	
+	,p.Reversal_ID AS Reversal_ID
+	,rvsl.DocumentNo AS JP_Reversal_DocumentNo
+	
+FROM adempiere.JP_CM_Payment p
+		LEFT OUTER JOIN adempiere.AD_Org otx ON (p.AD_OrgTrx_ID = otx.AD_Org_ID)
+		INNER JOIN adempiere.C_DocType dt ON (p.C_DocType_ID = dt.C_DocType_ID)
+		INNER JOIN adempiere.C_BankAccount ba ON (p.C_BankAccount_ID = ba.C_BankAccount_ID)
+		LEFT OUTER JOIN adempiere.JP_Bill bill ON (p.JP_Bill_ID = bill.JP_Bill_ID)
+		LEFT OUTER JOIN adempiere.C_Order o ON (p.C_Order_ID = o.C_Order_ID)
+		LEFT OUTER JOIN adempiere.C_Charge chg ON (p.C_Charge_ID = chg.C_Charge_ID)
+		LEFT OUTER JOIN adempiere.C_ConversionType cvt ON (p.C_ConversionType_ID = cvt.C_ConversionType_ID)
+		LEFT OUTER JOIN adempiere.C_Payment rvsl ON (p.Reversal_ID = rvsl.C_Payment_ID)
+;
+		
+ALTER TABLE adempiere.JP_AllPayments_V
+    OWNER TO adempiere;
