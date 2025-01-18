@@ -67,8 +67,11 @@ SELECT
     ,i.Posted AS Posted		
     ,i.Processed AS Processed 
     ,i.Ref_Invoice_ID AS Ref_Invoice_ID
+    ,ref.DocumentNo AS JP_Ref_Invoice_DocumentNo
 	,i.RelatedInvoice_ID AS RelatedInvoice_ID
+	,rel.DocumentNo AS JP_RelatedInvoice_DocumentNo
 	,i.Reversal_ID AS Reversal_ID
+	,rvsl.DocumentNo AS JP_Reversal_DocumentNo
     ,srep.Name AS JP_SalesRep_Name
     ,i.SendEMail AS SendEMail
  	,i.TotalLines AS TotalLines   

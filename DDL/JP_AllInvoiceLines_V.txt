@@ -62,6 +62,7 @@ SELECT
 	,il.RRAmt AS RRAmt
 	,il.RRStartDate AS RRStartDate
 	,il.Ref_InvoiceLine_ID AS Ref_InvoiceLine_ID
+	,cil.Line AS JP_Ref_InvoiceLine_Line
 	,il.TaxAmt AS TaxAmt
    
 FROM adempiere.JP_CM_InvoiceLine il
@@ -85,6 +86,7 @@ FROM adempiere.JP_CM_InvoiceLine il
 		LEFT OUTER JOIN adempiere.M_AttributeSetInstance asi ON (il.M_AttributeSetInstance_ID = asi.M_AttributeSetInstance_ID)
 		LEFT OUTER JOIN adempiere.M_InOutLine iol ON (il.M_InOutLine_ID = iol.M_InOutLine_ID)
 		LEFT OUTER JOIN adempiere.M_RMALine rma ON (il.M_RMALine_ID = rma.M_RMALine_ID)
+		LEFT OUTER JOIN adempiere.C_InvoiceLine cil ON (il.Ref_InvoiceLine_ID = cil.C_InvoiceLine_ID)
 		;
 ALTER TABLE adempiere.JP_AllInvoiceLines_V
     OWNER TO adempiere;
