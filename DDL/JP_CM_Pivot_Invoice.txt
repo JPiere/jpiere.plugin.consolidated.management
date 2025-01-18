@@ -1,0 +1,108 @@
+CREATE OR REPLACE VIEW adempiere.JP_CM_Pivot_Invoice
+ AS
+SELECT 
+ 	i.C_Invoice_ID AS JP_AllInvoices_V_ID
+ 	,0 AS AD_Client_ID
+	,i.AD_Client_ID AS AD_AllClients_V_ID
+	,0 AS AD_Org_ID
+	,i.AD_Org_ID AS JP_AllOrgs_V_ID
+	,i.IsActive AS IsActive
+	
+	,org.Value || '_' || org.Name AS JP_Org_VN
+	,otrx.Value || '_' || otrx.Name AS JP_OrgTrx_VN
+    ,bu.Value || '_' || bu.Name AS JP_BusinessUnit_VN
+    ,bu.JP_BusinessArea_ID AS JP_BusinessArea_ID
+    ,ba.Value || '_' || ba.Name AS JP_BusinessArea_VN
+	
+	,dt.Name AS JP_Doctype_Name
+	,i.DocBaseType AS DocBaseType
+	,glc.Name AS JP_GL_Category_Name
+	,i.DocumentNo AS DocumentNo
+	,i.DateInvoiced
+    ,to_char(i.DateInvoiced, 'YYYY-MM') AS JP_InvoicedMonth
+    ,i.DateAcct
+    ,to_char(i.DateAcct, 'YYYY-MM') AS JP_AcctMonth
+    
+    ,i.JP_AllBPartners_V_ID AS JP_AllBPartners_V_ID
+    ,bp.Value || '_' || bp.Name AS JP_BPartner_VN	
+    ,bpg.Value || '_' || bpg.Name AS JP_BP_Group_VN
+	,i.JP_CM_BPartner_ID AS JP_CM_BPartner_ID
+    ,cbp.Value || '_' || cbp.Name AS JP_CM_BPartner_VN
+	,COALESCE(cbp.JP_Corporation_ID,100) AS JP_Corporation_ID
+    ,crp.Value || '_' || crp.Name AS JP_Corporation_VN
+    ,COALESCE(crp.JP_CM_CorpType_ID,100) AS JP_CM_CorpType_ID
+    ,cct.Value || '_' || cct.Name AS JP_CM_CorpType_VN
+     
+    ,pl.Name AS JP_PriceList_Name
+    ,i.C_Currency_ID
+    ,cy.ISO_Code
+    ,srp.Name AS JP_SalesRep_Name
+ 	,pt.Value || '_' || pt.name AS JP_PaymentTerm_VN 
+    ,cntc.Value || '_' || cntc.Name AS JP_ContractCategory_VN
+    ,ca.Value || '_' || ca.Name AS JP_Contract_Acct_VN
+    ,i.IsSOTrx
+    ,i.DocStatus
+    ,i.Processed
+
+    ,il.C_InvoiceLine_ID AS JP_AllInvoiceLines_V_ID
+    ,il.line
+    ,il.JP_AllProducts_V_ID AS JP_AllProducts_V_ID
+    ,p.value || '_' || p.name AS JP_Product_VN
+    ,il.JP_CM_Product_ID AS JP_CM_Product_ID
+    ,cp.Value || '_' || cp.Name AS JP_CM_Product_VN
+    ,cp.JP_CM_ProductCategory_ID AS JP_CM_ProductCategory_ID
+    ,cpc.Value || '_' || cpc.Name AS JP_CM_ProductCategory_VN
+    ,cl1.JP_CM_ProductCategoryL1_ID AS JP_CM_ProductCategoryL1_ID
+    ,cl1.Value || '_' || cl2.Name AS JP_CM_ProductCategoryL1_VN
+    ,cl2.JP_CM_ProductCategoryL2_ID AS JP_CM_ProductCategoryL2_ID
+    ,cl2.Value || '_' || cl2.Name AS JP_CM_ProductCategoryL2_VN
+
+    ,ch.Name AS JP_Charge_Name
+    ,tax.Name AS JP_Tax_Name
+    ,act.Value || '_' || act.Name AS JP_Activity_VN
+    ,cmp.Value || '_' || cmp.Name AS JP_Campaign_VN
+    ,pj.Value || '_' || pj.Name AS JP_Project_VN
+    ,CASE WHEN i.DocBaseType = 'ARC' THEN il.QtyInvoiced * -1 WHEN i.DocBaseType = 'APC' THEN il.QtyInvoiced * -1 ELSE il.QtyInvoiced END AS QtyInvoiced
+    ,CASE WHEN i.DocBaseType = 'ARC' THEN il.PriceActual * -1 WHEN i.DocBaseType = 'APC' THEN il.PriceActual * -1 ELSE il.PriceActual END AS PriceActual
+    ,CASE WHEN i.DocBaseType = 'ARC' THEN il.LineNetAmt * -1 WHEN i.DocBaseType = 'APC' THEN il.LineNetAmt * -1 ELSE il.LineNetAmt END AS LinenetAmt
+    ,CASE WHEN i.DocBaseType = 'ARC' THEN il.JP_TaxBaseAmt * -1 WHEN i.DocBaseType = 'APC' THEN il.JP_TaxBaseAmt * -1 ELSE il.JP_TaxBaseAmt END AS JP_TaxBaseAmt
+    ,CASE WHEN i.DocBaseType = 'ARC' THEN il.JP_TaxAmt * -1 WHEN i.DocBaseType = 'APC' THEN il.JP_TaxAmt * -1 ELSE il.JP_TaxAmt END AS JP_TaxAmt
+    ,cl.Name AS JP_Client_Name
+   FROM adempiere.JP_CM_Invoice i
+     	INNER JOIN adempiere.AD_Client cl ON (i.AD_AllClients_V_ID = cl.AD_Client_ID)
+     	LEFT OUTER JOIN adempiere.AD_Org otrx ON(i.AD_OrgTrx_ID = otrx.AD_Org_ID)
+     	INNER JOIN adempiere.AD_Org org ON(i.JP_AllOrgs_V_ID = org.AD_Org_ID)
+     		INNER JOIN adempiere.AD_OrgInfo oif ON(org.AD_Org_ID = oif.AD_Org_ID)
+     		LEFT OUTER JOIN adempiere.JP_BusinessUnit bu ON(oif.JP_BusinessUnit_ID = bu.JP_BusinessUnit_ID)
+     		LEFT OUTER JOIN adempiere.JP_BusinessArea ba ON(bu.JP_BusinessArea_ID = ba.JP_BusinessArea_ID)
+     	INNER JOIN adempiere.C_DocType dt ON(i.C_DocTypeTarget_ID = dt.C_DocType_ID)
+     		INNER JOIN adempiere.GL_Category glc ON(dt.GL_Category_ID = glc.GL_Category_ID)
+     	INNER JOIN adempiere.C_BPartner bp ON(i.JP_AllBPartners_V_ID = bp.C_BPartner_ID)
+     	    INNER JOIN adempiere.C_BP_Group bpg ON(bp.C_BP_Group_ID = bpg.C_BP_Group_ID)
+     	INNER JOIN adempiere.JP_CM_BPartner cbp ON(i.JP_CM_BPartner_ID = cbp.JP_CM_BPartner_ID)
+     	    LEFT OUTER JOIN adempiere.JP_Corporation crp ON(cbp.JP_Corporation_ID = crp.JP_Corporation_ID)
+     	    	LEFT OUTER JOIN adempiere.JP_CM_CorpType cct ON(crp.JP_CM_CorpType_ID = cct.JP_CM_CorpType_ID)
+     	INNER JOIN adempiere.M_PriceList pl ON(i.M_PriceList_ID = pl.M_PriceList_ID)
+     	INNER JOIN adempiere.C_Currency cy ON(i.C_Currency_ID = cy.C_Currency_ID)
+     	LEFT OUTER JOIN adempiere.AD_User srp ON(i.SalesRep_ID = srp.AD_User_ID)
+        INNER JOIN adempiere.C_PaymentTerm pt ON(i.C_PaymentTerm_ID = pt.C_PaymentTerm_ID)
+        LEFT OUTER JOIN adempiere.JP_Contract cnt ON(i.JP_Contract_ID = cnt.JP_Contract_ID)
+        LEFT OUTER JOIN adempiere.JP_ContractCategory cntc ON(cnt.JP_ContractCategory_ID = cntc.JP_ContractCategory_ID)
+        LEFT OUTER JOIN adempiere.JP_ContractContent cc ON(i.JP_ContractContent_ID = cc.JP_ContractContent_ID)
+        LEFT OUTER JOIN adempiere.JP_Contract_Acct ca ON(cc.JP_Contract_Acct_ID = ca.JP_Contract_Acct_ID)
+     
+     INNER JOIN adempiere.JP_CM_InvoiceLine il ON(i.JP_CM_Invoice_ID = il.JP_CM_Invoice_ID)
+         LEFT OUTER JOIN adempiere.M_Product p ON(il.JP_AllProducts_V_ID = p.M_Product_ID)
+     		LEFT OUTER JOIN adempiere.JP_CM_Product cp ON(il.JP_CM_Product_ID = cp.JP_CM_Product_ID)
+     			LEFT OUTER JOIN adempiere.JP_CM_ProductCategory cpc ON(cp.JP_CM_ProductCategory_ID = cpc.JP_CM_ProductCategory_ID)
+     			LEFT OUTER JOIN adempiere.JP_CM_ProductCategoryL1 cl1 ON(cpc.JP_CM_ProductCategoryL1_ID = cl1.JP_CM_ProductCategoryL1_ID)
+     			LEFT OUTER JOIN adempiere.JP_CM_ProductCategoryL2 cl2 ON(cl1.JP_CM_ProductCategoryL2_ID = cl2.JP_CM_ProductCategoryL2_ID)
+         LEFT OUTER JOIN adempiere.C_Charge ch ON(il.C_Charge_ID = ch.C_Charge_ID)
+     	 LEFT OUTER JOIN adempiere.C_Tax tax ON(il.C_Tax_ID = tax.C_Tax_ID)
+     	 LEFT OUTER JOIN adempiere.C_Activity act ON(il.C_Activity_ID = act.C_Activity_ID)
+         LEFT OUTER JOIN adempiere.C_Campaign cmp ON(il.C_Campaign_ID = cmp.C_Campaign_ID)
+         LEFT OUTER JOIN adempiere.C_Project pj ON(il.C_Project_ID = pj.C_Project_ID)
+	;
+
+ALTER TABLE adempiere.JP_CM_Pivot_Invoice
+    OWNER TO adempiere;
